@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<link href="/css/style.css" rel="stylesheet" type="text/css">
+<title><%= entete %></title>
+</head>
+<body class="container" style = "text-align:center">
+  <h1><%= entete %></h1>
+  <form action=<%= action %> method = "post">
+    Pseudo :<br>
+    <input type="text" name="pseudo" placeholder=<%= user.pseudo%>>
+    <br><br>
+    Mot de passe :<br>
+    <input type="password" name="password" placeholder=<%= user.password%>>
+    <br><br>
+    Email :<br>
+    <input type="email" name="email" placeholder=<%= user.email%>>
+    <br><br>
+    Prénom :<br>
+    <input type="text" name="firstname" placeholder=<%= user.firstname%>>
+    <br><br>
+    Nom :<br>
+    <input type="text" name="lastname" placeholder=<%= user.lastname%>>
+    <br><br>
+    <input type="reset" value="Reset">
+    <input type="submit" value="Valider">
+  </form>
+</body>
+</html>
