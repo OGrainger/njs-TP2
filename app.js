@@ -6,6 +6,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const sass = require('node-sass-middleware')
 const db = require('sqlite')
+const cookieParser = require('cookie-parser')
 
 // Constantes et initialisations
 const PORT = process.PORT || 8080
@@ -18,6 +19,9 @@ app.use(method('_method'))
 // Mise en place des vues
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+//middleware cookie-parser
+app.use(cookieParser())
 
 // Middleware pour parser le body
 app.use(bodyParser.json())
@@ -35,34 +39,22 @@ app.use(sass({
 app.use(express.static(path.join(__dirname, 'assets')))
 
 // Création des db
-db.open('db/users.db').then(() => {
-	return db.run("CREATE TABLE IF NOT EXISTS users (pseudo, password, email, firstname, lastname, createdAt, updatedAt)")
-}).then(() => {
-  return db.close('db/users.db')
-}).then(() => {
-  return db.open('db/sessions.db')
-}).then(() => {
-	return db.run("CREATE TABLE IF NOT EXISTS sessions (userId, accessToken, createdAt, expiresAt)")
-}).then(() => {
-  return db.close('db/sessions.db')
+db.open('database/data.db').then(() => {
+  Promise.all([
+    db.run("CREATE TABLE IF NOT EXISTS users (pseudo, password, email, firstname, lastname, createdAt, updatedAt)"),
+    db.run("CREATE TABLE IF NOT EXISTS sessions (userId, accessToken, createdAt, expiresAt)"),
+    db.run("CREATE TABLE IF NOT EXISTS todos (userId, message, createdAt, updatedAt, completedAt)")
+  ])
 }).catch((err) => {
 	console.log('ERR > ', err)
 })
 
 // La liste des différents routeurs (dans l'ordre)
 app.all('*', (req, res, next) => {
-	console.log('REQ')
 	next()
 })
-
-app.get('/', (req, res, next) => {
-  res.redirect(301, '/login')
-})
-
-app.use('/login', require('./routes/index'))
-
-app.use('/create', require('./routes/create'))
-
+//DEBUG
+app.use('/', require('./routes/index'))
 
 // Erreur 404
 app.use(function(req, res, next) {

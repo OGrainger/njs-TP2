@@ -1,75 +1,37 @@
 const router = require('express').Router()
-const db = require('sqlite')
 const bcrypt = require('bcrypt')
-const saltRounds = 10
+const express = require('express')
+const Session = require('../models/session')
 
-router.get('/', (req, res) => {
-	res.format({
-		html: () => {
-			res.send(
-				res.render('index', {
-					h1: "Login"
-				})
-			)
-		},
-		json: () => {
-			let error = new Error('Bad request')
-			error.status = 400
-			next(error)
-		}
-	})
-})
-
-router.post('/', (req, res, next) => {
-	db.open('db/users.db').then(() => {
-		return db.get("SELECT rowid, * FROM users WHERE pseudo = ?", req.body.pseudo)
-	}).then((user) => {
-		// Si l'utilisateur existe
-		if (typeof user !== 'undefined') {
-			// Si le mdp correspond
-			if (bcrypt.compareSync(req.body.password, user.password)) {
-				db.close('db/users.db').then(() => {
-					return db.open('db/sessions.db')
-				}).then(() => {
-					//
-				})
-				// si l'utilisateur n'existe pas
-			} else {
-				db.close('db/users.db')
-				res.format({
-					html: () => {
-						res.send(
-							res.render('index', {
-								h1: "Login - Mot de passe incorrect"
-							})
-						)
-					},
-					json: () => {
-						let error = new Error('Bad request')
-						error.status = 400
-						next(error)
-					}
-				})
-			}
-			// Si le mdp ne correspond pas
-		} else {
-			db.close('db/users.db')
-			res.format({
-				html: () => {
-					res.send(
-						res.render('index', {
-							h1: "Login - Utilisateur introuvable"
+// REDIRIGE VERS TODO SI CO & TOKEN VALABLE SINON VERS SESSION
+router.get('/', (req, res, next) => {
+	if (typeof req.cookies.accessToken == 'undefined') {
+		console.log("Pas ou plus de token, redirection")
+		res.redirect('/sessions')
+	} else {
+		Session.getFromToken(req.cookies.accessToken)
+			.then((session) => {
+				//Si la session est expirée OU le token n'existe pas sur le serveur
+				if (typeof session == 'undefined' || session.expiresAt < Date.now()) {
+					res.clearCookie('accessToken')
+					Session.deleteFromToken(req.cookies.accessToken)
+						.then(() => {
+							if (session.expiresAt < Date.now()) {
+								console.log("Session expirée, redirection")
+							} else {
+								console.log("Token absent de notre base de donnée, redirection")
+							}
+							res.redirect('/sessions')
 						})
-					)
-				},
-				json: () => {
-					let error = new Error('Bad request')
-					error.status = 400
-					next(error)
+				} else {
+					res.redirect('/todo')
 				}
-			})
-		}
-		}).catch(next)
+			}).catch(next)
+	}
 })
+
+router.use('/sessions', require('./sessions'))
+
+router.use('/todo', require('./todo'))
 
 module.exports = router
