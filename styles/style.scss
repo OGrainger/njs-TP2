@@ -35,10 +35,15 @@ a {
   color: inherit;
   text-decoration: inherit;
   font-weight: bold;
+  text-shadow: 2px 2px #000;
+  margin: 0 0;
+  border: none;
 }
 
 a:hover {
-    background-color: hotpink;
+  text-shadow: 2px 2px #fff;
+  color: $transparent;
+  background-color: $transparent;
 }
 
 form:placeholder {
@@ -47,6 +52,8 @@ form:placeholder {
 #contentTable {
   font: $font-secondary;
   text-align: center;
+  width: 100%;
+  padding: 5px;
 }
 
 #error {

@@ -11,16 +11,16 @@ router.get('/', (req, res, next) => {
 	} else {
 		Session.getFromToken(req.cookies.accessToken)
 			.then((session) => {
-				//Si la session est expirée OU le token n'existe pas sur le serveur
-				if (typeof session == 'undefined' || session.expiresAt < Date.now()) {
+				if (typeof session == 'undefined') {
+					res.clearCookie('accessToken')
+					console.log("Token absent de notre base de donnée, redirection")
+					res.redirect('/sessions')
+				} else if (session.expiresAt < Date.now()) {
+					//Si la session est expirée OU le token n'existe pas sur le serveur
 					res.clearCookie('accessToken')
 					Session.deleteFromToken(req.cookies.accessToken)
 						.then(() => {
-							if (session.expiresAt < Date.now()) {
-								console.log("Session expirée, redirection")
-							} else {
-								console.log("Token absent de notre base de donnée, redirection")
-							}
+							console.log("Token expiré, redirection")
 							res.redirect('/sessions')
 						})
 				} else {

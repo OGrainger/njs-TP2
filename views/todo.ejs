@@ -1,25 +1,43 @@
 <!DOCTYPE html>
-
 <html>
-    <head>
-        <title>Todo list</title>
-    </head>
+<head>
+  <link href="/css/style.css" rel="stylesheet" type="text/css">
+  <title>TP todolist</title>
+</head>
+<body>
+  <h1>Ma liste de tâches personnelle</h1>
+  <form action="/todo/ajouter/" method="post">
+    <p>
+      <label for="newtodo">Que dois-je faire ?</label>
+      <input type="text" name="newtodo" autofocus />
+      <input type="submit" value="Ajouter" />
+    </p>
+  </form>
+  <table id= "contentTable">
+    <% for (i=0; i < todolist.length; i++) {%>
+      <% if (todolist[i].completedAt == 0) {%>
+        <tr>
+          <td><a href="/todo/completer/<%=todolist[i].todoId%>">☐</a></td>
+          <td><%= todolist[i].message %></td>
+          <td style="text-shadow: 1px 1px #000;"><i>☜ Just do it !</i></td>
+          <td><a href="/todo/supprimer/<%=todolist[i].todoId%>">✕</a></td>
+        </tr>
+      <% } %>
+    <% } %>
+    <% for (i=0; i < todolist.length; i++) {%>
+      <% if (todolist[i].completedAt !== 0) {%>
+        <tr>
+          <td>☑</td>
+          <td><s><%= todolist[i].message %></s></td>
+          <td>Tâche terminée le : <%= todolist[i].completedAt %></td>
+          <td><a href="/todo/supprimer/<%=todolist[i].todoId%>">✕</a></td>
+        </tr>
+      <% } %>
+    <% } %>
+  </table>
+  <div id="easterEgg">
+    <a href = "https://www.youtube.com/watch?v=RMICTAl4LCg&list=PLjrhosP-Fp_p19kteSIowkJOaRfgt6N81&index=24">O</a>
+  </div>
+</body>
 
-    <body>
-        <h1>Todolist de </h1>
-
-        <ul>
-        <% for (i=0; i < todolist.length; i++) { %>
-            <li><a href="/todo/supprimer/<%= index %>">✘</a> <%= todo %></li>
-        <% } %>
-        </ul>
-
-        <form action="/todo/ajouter/" method="post">
-            <p>
-                <label for="newtodo">Que dois-je faire ?</label>
-                <input type="text" name="newtodo" id="newtodo" autofocus />
-                <input type="submit" />
-            </p>
-        </form>
-    </body>
 </html>

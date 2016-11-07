@@ -39,11 +39,11 @@ app.use(sass({
 app.use(express.static(path.join(__dirname, 'assets')))
 
 // Création des db
-db.open('database/data.db').then(() => {
+db.open('data.db').then(() => {
   Promise.all([
     db.run("CREATE TABLE IF NOT EXISTS users (pseudo, password, email, firstname, lastname, createdAt, updatedAt)"),
     db.run("CREATE TABLE IF NOT EXISTS sessions (userId, accessToken, createdAt, expiresAt)"),
-    db.run("CREATE TABLE IF NOT EXISTS todos (userId, message, createdAt, updatedAt, completedAt)")
+    db.run("CREATE TABLE IF NOT EXISTS todos (todoId, userId, message, createdAt, updatedAt, completedAt)")
   ])
 }).catch((err) => {
 	console.log('ERR > ', err)

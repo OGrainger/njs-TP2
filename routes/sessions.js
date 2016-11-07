@@ -4,6 +4,7 @@ const db = require('sqlite')
 const bcrypt = require('bcrypt')
 
 router.get('/', (req, res, next) => {
+	res.status(200)
 	res.format({
 		html: () => {
 			res.send(
@@ -35,7 +36,7 @@ router.post('/', (req, res, next) => {
 								res.redirect("/")
 							},
 							json: () => {
-								res.status(201).send({
+								res.status(201).json({
 									accessToken: token
 								})
 							}
@@ -79,6 +80,7 @@ router.post('/', (req, res, next) => {
 })
 
 router.get('/new', (req, res, next) => {
+	res.status(200)
 	res.format({
 		html: () => {
 			res.send(
