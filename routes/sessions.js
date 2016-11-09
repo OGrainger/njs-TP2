@@ -2,12 +2,12 @@ const router = require('express').Router()
 const User = require('../models/user')
 const db = require('sqlite')
 const bcrypt = require('bcrypt')
+const Session = require('../models/session')
 
 router.get('/', (req, res, next) => {
-	res.status(200)
-	res.format({
+	return res.format({
 		html: () => {
-			res.send(
+			return res.send(
 				res.render('login', {
 					h1: "Login"
 				})
@@ -22,31 +22,39 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-	User.getFromPseudo(req.body.pseudo)
+	User.get(req.body.pseudo)
 		.then((user) => {
 			// Si l'utilisateur existe
 			if (typeof user !== 'undefined') {
 				// Si le mdp correspond
 				if (bcrypt.compareSync(req.body.password, user.password)) {
-					User.generateToken(user).then((token) => {
-						res.format({
-							html: () => {
-								res.cookie("accessToken", token)
-								console.log("Cookie parsé ! Votre token : ", token)
-								res.redirect("/")
-							},
-							json: () => {
-								res.status(201).json({
-									accessToken: token
-								})
-							}
-						})
-					}).catch(next)
+					Session.generateToken()
+						.then((token) => {
+							data = {}
+							data.pseudo = user.pseudo
+							data.accessToken = token
+							Session.insert(data)
+							return Promise.resolve(token)
+						}).then((token) => {
+							res.format({
+								html: () => {
+									res.cookie("accessToken", token)
+									console.log("Cookie parsé !")
+									res.redirect("/")
+								},
+								json: () => {
+									res.status(201).json({
+										accessToken: token,
+										note: "(JSON UNIQUEMENT) Losque que vous allez faire des requêtes pour vos todos, utilisez ce token en le mettant en header avec comme clé \'accessToken\'. Pour les différentes requêtes, veuillez vous référer à la documentation."
+									})
+								}
+							})
+						}).catch(next)
 				} else {
 					// Sinon renvoie une page avec l'err (mdp inc)
 					res.format({
 						html: () => {
-							res.send(
+							return res.send(
 								res.render('login', {
 									h1: "Mot de passe incorrect"
 								})
@@ -63,7 +71,7 @@ router.post('/', (req, res, next) => {
 				// Sinon renvoie une page avec l'err (utilisateur introuvable)
 				res.format({
 					html: () => {
-						res.send(
+						return res.send(
 							res.render('login', {
 								h1: "Utilisateur introuvable"
 							})
@@ -83,7 +91,7 @@ router.get('/new', (req, res, next) => {
 	res.status(200)
 	res.format({
 		html: () => {
-			res.send(
+			return res.send(
 				res.render('create_edit', {
 					entete: "Nouvel utilisateur",
 					user: {},
@@ -104,7 +112,7 @@ router.post('/new', (req, res, next) => {
 		// Si un champ est vide, on réactualise avec une note
 		res.format({
 			html: () => {
-				res.send(
+				return res.send(
 					res.render('create_edit', {
 						entete: "Veuillez remplir tous les champs",
 						user: {},
@@ -120,13 +128,13 @@ router.post('/new', (req, res, next) => {
 		})
 	} else {
 		//sinon, on check si le pseudo est dispo
-		User.getFromPseudo(req.body.pseudo)
+		User.get(req.body.pseudo)
 			.then((user) => {
 				if (typeof user !== "undefined") {
 					// Si le pseudo existe déjà, on réactualise avec une note
 					res.format({
 						html: () => {
-							res.send(
+							return res.send(
 								res.render('create_edit', {
 									entete: "Utilisateur existant",
 									user: {},

@@ -8,12 +8,17 @@ const sass = require('node-sass-middleware')
 const db = require('sqlite')
 const cookieParser = require('cookie-parser')
 
+const Session = require('./models/session')
+
 // Constantes et initialisations
 const PORT = process.PORT || 8080
 const app = express()
 
 //Dépendance : method override (pour simuler un PUT & DELETE)
 const method = require('method-override')
+
+//------------------------
+
 app.use(method('_method'))
 
 // Mise en place des vues
@@ -42,18 +47,37 @@ app.use(express.static(path.join(__dirname, 'assets')))
 db.open('data.db').then(() => {
   Promise.all([
     db.run("CREATE TABLE IF NOT EXISTS users (pseudo, password, email, firstname, lastname, createdAt, updatedAt)"),
-    db.run("CREATE TABLE IF NOT EXISTS sessions (userId, accessToken, createdAt, expiresAt)"),
-    db.run("CREATE TABLE IF NOT EXISTS todos (todoId, userId, message, createdAt, updatedAt, completedAt)")
+    db.run("CREATE TABLE IF NOT EXISTS todos (todoId, pseudo, message, createdAt, updatedAt, completedAt)")
   ])
 }).catch((err) => {
 	console.log('ERR > ', err)
 })
 
-// La liste des différents routeurs (dans l'ordre)
-app.all('*', (req, res, next) => {
-	next()
+//middleware SessionController : contrôle de la session
+app.use(function (req, res, next) {
+  let token = Session.getToken(req.cookies.accessToken, req.headers.accessToken)
+	Session.get(token)
+		.then((session) => {
+			if (session == null) {
+				// Si la promesse ne renvoie aucune correspondance entre le token (s'il existe) et la moindre session dans la db Redis
+				Session.delete(token)
+        req.isConnected = false
+				res.format({
+					html: () => {
+						res.clearCookie('accessToken')
+						next()
+					},
+					json: () => {
+						next()
+					}
+				})
+			} else {
+        req.isConnected = true
+				next()
+			}
+		}).catch(next)
 })
-//DEBUG
+
 app.use('/', require('./routes/index'))
 
 // Erreur 404
@@ -92,6 +116,10 @@ app.use(function(err, req, res, next) {
     json: () => { res.send(data) }
   })
 })
+
+//app.use('/sessions', require('./sessions'))
+
+//app.use('/todo', require('./todo'))
 
 app.listen(PORT, () => {
   console.log('Serveur démarré sur le port : ', PORT)
