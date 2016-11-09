@@ -6,7 +6,7 @@ TP avec Express, ioredis et mangoose
 
 Installez redis
 Lancez un serveur redis avec la commande suivante :
-redis-server
+`redis-server`
 
 #Perso
 
