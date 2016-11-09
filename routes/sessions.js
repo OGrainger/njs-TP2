@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const Session = require('../models/session')
 
 router.get('/', (req, res, next) => {
-	return res.format({
+	res.format({
 		html: () => {
 			return res.send(
 				res.render('login', {
