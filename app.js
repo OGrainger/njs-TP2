@@ -20,7 +20,6 @@ const method = require('method-override')
 //------------------------
 
 app.use(method('_method'))
-
 // Mise en place des vues
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
