@@ -11,7 +11,6 @@ router.get('/', (req, res, next) => {
 
 router.all('/todo*', (req, res, next) => {
 	if (req.isConnected == true) {
-		console.log("GUT")
     next()
   } else {
     res.redirect('/sessions')

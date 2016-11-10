@@ -5,6 +5,10 @@ const bcrypt = require('bcrypt')
 const Session = require('../models/session')
 
 router.get('/', (req, res, next) => {
+	// req.h1 = "login"
+	// next()
+
+
 	res.format({
 		html: () => {
 			return res.send(
@@ -36,10 +40,11 @@ router.post('/', (req, res, next) => {
 							Session.insert(data)
 							return Promise.resolve(token)
 						}).then((token) => {
+
+
 							res.format({
 								html: () => {
 									res.cookie("accessToken", token)
-									console.log("Cookie parsé !")
 									res.redirect("/")
 								},
 								json: () => {

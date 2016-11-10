@@ -46,7 +46,7 @@ app.use(express.static(path.join(__dirname, 'assets')))
 db.open('data.db').then(() => {
   Promise.all([
     db.run("CREATE TABLE IF NOT EXISTS users (pseudo, password, email, firstname, lastname, createdAt, updatedAt)"),
-    db.run("CREATE TABLE IF NOT EXISTS todos (todoId, pseudo, message, createdAt, updatedAt, completedAt)")
+    db.run("CREATE TABLE IF NOT EXISTS teams (teamName, password, createdAt)")
   ])
 }).catch((err) => {
 	console.log('ERR > ', err)
