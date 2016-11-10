@@ -28,7 +28,7 @@ router.post('/', (req, res, next) => {
 							res.format({
 								html: () => {
 									res.cookie("accessToken", token)
-									res.redirect("/")
+									res.redirect(301, "./todo")
 								},
 								json: () => {
 									res.status(201).json({
@@ -54,11 +54,9 @@ router.post('/', (req, res, next) => {
 router.all('/', (req, res, next) => {
 	res.format({
 		html: () => {
-			return res.send(
-				res.render('login', {
-					h1: req.h1
-				})
-			)
+			res.render('login', {
+				h1: req.h1
+			})
 		},
 		json: () => {
 			let error = new Error(req.jsonError)
@@ -88,7 +86,7 @@ router.post('/new', (req, res, next) => {
 				if (typeof user !== "undefined") {
 					req.h1 = "Utilisateur existant"
 					req.jsonError = req.h1
-					// Si le pseudo existe déjà, on réactualise avec une note
+						// Si le pseudo existe déjà, on réactualise avec une note
 				} else {
 					User.insert(req.body).then(() => {
 						res.format({
@@ -111,13 +109,11 @@ router.post('/new', (req, res, next) => {
 router.all('/new', (req, res, next) => {
 	res.format({
 		html: () => {
-			return res.send(
-				res.render('create_edit', {
-					h1: req.h1,
-					user: {},
-					action: "/sessions/new"
-				})
-			)
+			res.render('create_edit', {
+				h1: req.h1,
+				user: {},
+				action: "/sessions/new"
+			})
 		},
 		json: () => {
 			let error = new Error(req.jsonError)
@@ -125,6 +121,13 @@ router.all('/new', (req, res, next) => {
 			next(error)
 		}
 	})
+})
+
+//-----DECONNEXION
+
+router.get('/disconnect', (req, res, next) => {
+	res.clearCookie('accessToken')
+	res.redirect(301, './')
 })
 
 module.exports = router

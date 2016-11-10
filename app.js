@@ -45,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'assets')))
 // Création des db
 db.open('data.db').then(() => {
   Promise.all([
-    db.run("CREATE TABLE IF NOT EXISTS users (pseudo, password, email, firstname, lastname, createdAt, updatedAt)"),
+    db.run("CREATE TABLE IF NOT EXISTS users (pseudo, password, teamName, email, firstname, lastname, createdAt, updatedAt)"),
     db.run("CREATE TABLE IF NOT EXISTS teams (teamName, password, createdAt)")
   ])
 }).catch((err) => {
@@ -105,14 +105,15 @@ app.use(function(err, req, res, next) {
 
   // Réponse multi-format
   res.format({
-    html: () => { res.render('error', {
+    html: () => {
+      res.render('error', {
       message: data.message,
       status: data.status,
       error: data.error,
       data : JSON.stringify(data)
       }
     )},
-    json: () => { return res.send(data) }
+    json: () => { res.send(data) }
   })
 })
 

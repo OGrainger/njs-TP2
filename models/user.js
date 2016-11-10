@@ -20,7 +20,7 @@ module.exports = {
 		let hash = bcrypt.hashSync(params.password, saltRounds)
 		let d = new Date()
 		let dateNow = d.toLocaleDateString()
-		return db.run("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)", params.pseudo, hash, params.email, params.firstname, params.lastname, dateNow, dateNow)
+		return db.run("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)", params.pseudo, hash, '', params.email, params.firstname, params.lastname, dateNow, dateNow)
 	},
 
 
