@@ -112,7 +112,7 @@ app.use(function(err, req, res, next) {
       data : JSON.stringify(data)
       }
     )},
-    json: () => { res.send(data) }
+    json: () => { return res.send(data) }
   })
 })
 

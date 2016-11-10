@@ -47,7 +47,6 @@ router.post('/', (req, res, next) => {
 				req.h1 = "Utilisateur introuvable"
 				req.jsonError = req.h1
 				next()
-				})
 			}
 		})
 })
