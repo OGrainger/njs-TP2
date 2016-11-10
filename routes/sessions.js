@@ -5,24 +5,9 @@ const bcrypt = require('bcrypt')
 const Session = require('../models/session')
 
 router.get('/', (req, res, next) => {
-	// req.h1 = "login"
-	// next()
-
-
-	res.format({
-		html: () => {
-			return res.send(
-				res.render('login', {
-					h1: "Login"
-				})
-			)
-		},
-		json: () => {
-			let error = new Error('Bad request')
-			error.status = 400
-			next(error)
-		}
-	})
+	req.h1 = "login"
+	req.jsonError = "Bad request"
+	next()
 })
 
 router.post('/', (req, res, next) => {
@@ -40,8 +25,6 @@ router.post('/', (req, res, next) => {
 							Session.insert(data)
 							return Promise.resolve(token)
 						}).then((token) => {
-
-
 							res.format({
 								html: () => {
 									res.cookie("accessToken", token)
@@ -56,103 +39,57 @@ router.post('/', (req, res, next) => {
 							})
 						}).catch(next)
 				} else {
-					// Sinon renvoie une page avec l'err (mdp inc)
-					res.format({
-						html: () => {
-							return res.send(
-								res.render('login', {
-									h1: "Mot de passe incorrect"
-								})
-							)
-						},
-						json: () => {
-							let error = new Error('Mot de passe incorrect')
-							error.status = 400
-							next(error)
-						}
-					})
+					req.h1 = "Mot de passe incorrect"
+					req.jsonError = req.h1
+					next()
 				}
 			} else {
-				// Sinon renvoie une page avec l'err (utilisateur introuvable)
-				res.format({
-					html: () => {
-						return res.send(
-							res.render('login', {
-								h1: "Utilisateur introuvable"
-							})
-						)
-					},
-					json: () => {
-						let error = new Error('Utilisateur introuvable')
-						error.status = 400
-						next(error)
-					}
+				req.h1 = "Utilisateur introuvable"
+				req.jsonError = req.h1
+				next()
 				})
 			}
 		})
 })
 
-router.get('/new', (req, res, next) => {
-	res.status(200)
+router.all('/', (req, res, next) => {
 	res.format({
 		html: () => {
 			return res.send(
-				res.render('create_edit', {
-					entete: "Nouvel utilisateur",
-					user: {},
-					action: "/sessions/new"
+				res.render('login', {
+					h1: req.h1
 				})
 			)
 		},
 		json: () => {
-			let error = new Error('Bad request')
+			let error = new Error(req.jsonError)
 			error.status = 400
 			next(error)
 		}
 	})
 })
 
+//-------- PAGE NOUVEL UTILISATEUR --------
+
+router.get('/new', (req, res, next) => {
+	req.h1 = "Nouvel utilisateur"
+	req.jsonError = "bad request"
+	next()
+})
+
 router.post('/new', (req, res, next) => {
 	if (req.body.pseudo === "" || req.body.password === "" || req.body.email === "" || req.body.firstname === "" || req.body.lastname === "") {
 		// Si un champ est vide, on réactualise avec une note
-		res.format({
-			html: () => {
-				return res.send(
-					res.render('create_edit', {
-						entete: "Veuillez remplir tous les champs",
-						user: {},
-						action: "/sessions/new"
-					})
-				)
-			},
-			json: () => {
-				let error = new Error('Au moins une donnée manquante parmis les suivantes : pseudo, mdp, email, prénom, nom')
-				error.status = 400
-				next(error)
-			}
-		})
+		req.h1 = "Veuillez remplir tous les champs"
+		req.jsonError = "Au moins une donnée manquante parmis les suivantes : pseudo, mdp, email, prénom, nom"
 	} else {
 		//sinon, on check si le pseudo est dispo
 		User.get(req.body.pseudo)
 			.then((user) => {
 				if (typeof user !== "undefined") {
+					req.h1 = "Utilisateur existant"
+					req.jsonError = req.h1
 					// Si le pseudo existe déjà, on réactualise avec une note
-					res.format({
-						html: () => {
-							return res.send(
-								res.render('create_edit', {
-									entete: "Utilisateur existant",
-									user: {},
-									action: "/sessions/new"
-								})
-							)
-						},
-						json: () => {
-							let error = new Error('Utilisateur existant')
-							error.status = 400
-							next(error)
-						}
-					})
 				} else {
 					User.insert(req.body).then(() => {
 						res.format({
@@ -162,7 +99,7 @@ router.post('/new', (req, res, next) => {
 							},
 							json: () => {
 								res.status(201).send({
-									message: 'success'
+									message: 'Nouvel utilisateur créé avec succès'
 								})
 							}
 						})
@@ -170,6 +107,25 @@ router.post('/new', (req, res, next) => {
 				}
 			})
 	}
+})
+
+router.all('/new', (req, res, next) => {
+	res.format({
+		html: () => {
+			return res.send(
+				res.render('create_edit', {
+					h1: req.h1,
+					user: {},
+					action: "/sessions/new"
+				})
+			)
+		},
+		json: () => {
+			let error = new Error(req.jsonError)
+			error.status = 400
+			next(error)
+		}
+	})
 })
 
 module.exports = router
