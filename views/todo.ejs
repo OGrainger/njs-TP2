@@ -2,22 +2,220 @@
 <html>
 <head>
   <link href="/css/style.css" rel="stylesheet" type="text/css">
-  <title>TP todolist</title>
+  <title>Todolist</title>
 </head>
-<body  style = "text-align:center">
-  <div style="width:100%;margin:0 auto;">
-    <div id="colonneTeam">
-      <h1>Tâches d'équipe</h1>
-      Si user affecté à une team : affichage des todos, sinon affichage de login team
+<body style="margin:0;">
+  <% if (isConnectedToTeam == false) {%>
+    <div id="colonneLoginTeam">
+    <h1>Gestion d&apos;équipe</h1>
+    <% if (error !== '') {%>
+      <hr />
+    <%}%>
+    <h3><%=error%></h3>
+    <hr />
+    <h2>Rejoindre une équipe</h2>
+    <form action="/todo/teams/login" method = "post">
+      Nom de l&apos;équipe :<br>
+      <input type="text" autofocus name="teamName">
+      <br><br>
+      Mot de passe :<br>
+      <input type="password" name="password">
+      <br>
+      <input type="submit" value="Login">
+    </form>
+    <hr />
+    <h2>Créer une équipe</h2>
+    <form action="/todo/teams/create" method = "post">
+      Nom de votre équipe :<br>
+      <input type="text" autofocus name="teamName">
+      <br><br>
+      Mot de passe :<br>
+      <input type="password" name="password">
+      <br><br>
+      Confirmez le mot de passe :<br>
+      <input type="password" name="confirmPassword">
+      <br>
+      <input type="submit" value="Valider">
+    </form>
+    <hr />
     </div>
-
-    <div id="colonnePerso">
-      <h1>Tâches personnelles</h1>
-      affichage todos perso
+  <%} else {%>
+  <div id="colonneTeam">
+    <div class="todoBandeauTop">
+      <h1>Tâches d&apos;équipe</h1>
+    </div>
+    <div id="todoLeft" class="todoData">
+    <table>
+      <tr id="header">
+        <th></th>
+        <th>Message</th>
+        <th>Par</th>
+        <th>Pour</th>
+        <th>Complétée le</th>
+        <th></th>
+      </tr>
+      <% for (i=0; i < todolistTeam.length; i++) {%>
+        <% if (todolistTeam[i].completedAt == 0) {%>
+          <tr>
+            <td>
+            <form method="post" action="/todo/complete" class="inline">
+            <input type="hidden" name="todoId" value="<%=todolistTeam[i].todoId%>">
+            <button type="submit" name="submit_param" value="submit_value" class="link-button">
+            ☐
+            </button>
+            </form>
+            </td>
+            <td><%= todolistTeam[i].message %></td>
+            <td><%=todolistTeam[i].by%> </td>
+            <td><%=todolistTeam[i].for%> </td>
+            <td style="text-shadow: 1px 1px grey;"><i>☜ Just do it !</i></td>
+            <td>
+            <form method="post" action="/todo/delete" class="inline">
+            <input type="hidden" name="todoId" value="<%=todolistTeam[i].todoId%>">
+            <button type="submit" name="submit_param" value="submit_value" class="link-button">
+            ✕
+            </button>
+            </form>
+            </td>
+          </tr>
+        <% } %>
+      <% } %>
+      <% for (i=0; i < todolistTeam.length; i++) {%>
+        <% if (todolistTeam[i].completedAt !== 0) {%>
+          <tr>
+            <td>
+            <form method="post" action="/todo/undo" class="inline">
+            <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+            <button type="submit" name="submit_param" value="submit_value" class="link-button">
+            ☑
+            </button>
+            </form>
+            </td>
+            <td><%= todolistTeam[i].message %></td>
+            <td><%=todolistTeam[i].by%> </td>
+            <td><%=todolistTeam[i].for%> </td>
+            <td><%= todolistTeam[i].completedAt %></td>
+            <td>
+            <form method="post" action="/todo/delete" class="inline">
+            <input type="hidden" name="todoId" value="<%=todolistTeam[i].todoId%>">
+            <button type="submit" name="submit_param" value="submit_value" class="link-button">
+            ✕
+            </button>
+            </form>
+            </td>
+          </tr>
+        <% } %>
+      <% } %>
+    </table>
+    </div>
+    <div class="todoBandeauBottom">
+    <form style="text-align:left;padding:10px" action="/todo/teams/new" method = "post">
+      Nouvelle tâche :<input type="text" name="message" />
+      <br />
+      Pour : <br />
+      <% for (i=0; i < teamMembers.length; i++) {%>
+      <input type="radio" name="for" value=<%=teamMembers[i].pseudo%> > <%=teamMembers[i].pseudo%><br>
+      <%}%>
+      <input type="radio" name="for" value="L'équipe" checked> Toute l&apos;équipe
+      <br />
+      <input type="submit" value="Valider" />
+    </form>
+    <br />
+    <div class="col_left">
+      <form action="/todo/teams/quit" method = "post">
+        <input type="submit" value="Quitter l'équipe" />
+      </form>
+    </div>
+    <% if (isAdmin == true) {%>
+      <div class="col_right">
+      <form action="/todo/teams/delete" method = "post">
+        <input type="submit" value="Supprimer l'équipe" />
+      </form>
+      </div>
+    <%}%>
     </div>
   </div>
-
-
+  <%}%>
+  <div id="colonnePerso">
+    <div class="todoBandeauTop">
+      <h1>Tâches personnelles</h1>
+    </div>
+    <div class="todoData" id="todoRight">
+      <table>
+        <tr id="header">
+          <th></th>
+          <th>Message</th>
+          <th>Complétée le</th>
+          <th></th>
+        </tr>
+        <% for (i=0; i < todolistPerso.length; i++) {%>
+          <% if (todolistPerso[i].completedAt == 0) {%>
+            <tr>
+              <td>
+              <form method="post" action="/todo/complete" class="inline">
+              <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+              <button type="submit" name="submit_param" value="submit_value" class="link-button">
+              ☐
+              </button>
+              </form>
+              </td>
+              <td><%= todolistPerso[i].message %></td>
+              <td style="text-shadow: 1px 1px grey;"><i>☜ Just do it !</i></td>
+              <td>
+              <form method="post" action="/todo/delete" class="inline">
+              <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+              <button type="submit" name="submit_param" value="submit_value" class="link-button">
+              ✕
+              </button>
+              </form>
+              </td>
+            </tr>
+          <% } %>
+        <% } %>
+        <% for (i=0; i < todolistPerso.length; i++) {%>
+          <% if (todolistPerso[i].completedAt !== 0) {%>
+            <tr>
+              <td>
+              <form method="post" action="/todo/undo" class="inline">
+              <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+              <button type="submit" name="submit_param" value="submit_value" class="link-button">
+              ☑
+              </button>
+              </form>
+              </td>
+              <td><%= todolistPerso[i].message %></td>
+              <td><%= todolistPerso[i].completedAt %></td>
+              <td>
+              <form method="post" action="/todo/delete" class="inline">
+              <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+              <button type="submit" name="submit_param" value="submit_value" class="link-button">
+              ✕
+              </button>
+              </form>
+              </td>
+            </tr>
+          <% } %>
+        <% } %>
+      </table>
+    </div>
+    <div class="todoBandeauBottom">
+      <form action="/todo/new" method = "post">
+        Nouvelle tâche :<input type="text" autofocus name="message" />
+        <br />
+        <input type="submit" value="Valider" />
+      </form>
+      <br />
+      <div class="col_left">
+        <form action="/sessions/manage" method = "get">
+        <input type="submit" value="Gestion du compte" />
+      </form>
+      </div>
+      <div class="col_right">
+        <form action="/sessions/disconnect" method = "post">
+        <input type="submit" value="Se déconnecter" />
+      </form>
+      </div>
+    </div>
+  </div>
 </body>
-
 </html>

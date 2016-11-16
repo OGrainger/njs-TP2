@@ -6,21 +6,24 @@
 </head>
 <body class="container" style = "text-align:center">
   <h1><%= h1 %></h1>
-  <form action=<%= action %> method = "post">
+  <form action="/sessions/new" method = "post">
     Pseudo :<br>
-    <input type="text" name="pseudo" autofocus placeholder=<%= user.pseudo%>>
+    <input type="text" name="pseudo" autofocus>
     <br><br>
     Mot de passe :<br>
-    <input type="password" name="password" placeholder=<%= user.password%>>
+    <input type="password" name="password">
+    <br><br>
+    Confirmez votre mot de passe :<br>
+    <input type="password" name="confirmPassword">
     <br><br>
     Email :<br>
-    <input type="email" name="email" placeholder=<%= user.email%>>
+    <input type="mail" name="email">
     <br><br>
     Prénom :<br>
-    <input type="text" name="firstname" placeholder=<%= user.firstname%>>
+    <input type="text" name="firstname">
     <br><br>
     Nom :<br>
-    <input type="text" name="lastname" placeholder=<%= user.lastname%>>
+    <input type="text" name="lastname">
     <br><br>
     <input type="reset" value="Reset">
     <input type="submit" value="Valider">

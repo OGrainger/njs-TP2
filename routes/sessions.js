@@ -33,7 +33,7 @@ router.post('/', (req, res, next) => {
 								json: () => {
 									res.status(201).json({
 										accessToken: token,
-										note: "(JSON UNIQUEMENT) Losque que vous allez faire des requêtes pour vos todos, utilisez ce token en le mettant en header avec comme clé \'accessToken\'. Pour les différentes requêtes, veuillez vous référer à la documentation."
+										note: "(JSON UNIQUEMENT) Losque que vous allez faire des requêtes pour vos todos, utilisez ce token en le mettant en header avec comme clé \'token\'. Pour les différentes requêtes, veuillez vous référer à la documentation."
 									})
 								}
 							})
@@ -75,23 +75,29 @@ router.get('/new', (req, res, next) => {
 })
 
 router.post('/new', (req, res, next) => {
-	if (req.body.pseudo === "" || req.body.password === "" || req.body.email === "" || req.body.firstname === "" || req.body.lastname === "") {
+	if (req.body.pseudo === "" || req.body.password === "" || req.body.confirmPassword === "" || req.body.email === "" || req.body.firstname === "" || req.body.lastname === "") {
 		// Si un champ est vide, on réactualise avec une note
 		req.h1 = "Veuillez remplir tous les champs"
 		req.jsonError = "Au moins une donnée manquante parmis les suivantes : pseudo, mdp, email, prénom, nom"
+		next()
+	} else if (req.body.password !== req.body.confirmPassword) {
+		req.h1 = "Les mots de passe ne correspondent pas"
+		req.jsonError = "Les mots de passe ne correspondent pas"
+		next()
 	} else {
 		//sinon, on check si le pseudo est dispo
 		User.get(req.body.pseudo)
 			.then((user) => {
 				if (typeof user !== "undefined") {
-					req.h1 = "Utilisateur existant"
+					req.h1 = "Pseudo non disponible"
 					req.jsonError = req.h1
+					next()
 						// Si le pseudo existe déjà, on réactualise avec une note
 				} else {
 					User.insert(req.body).then(() => {
 						res.format({
 							html: () => {
-								console.log("new user")
+								console.log("---\nNouvel utilisateur\n- Pseudo : " + req.body.pseudo + "\n- Email : " + req.body.email + "\n---")
 								res.redirect(301, '/')
 							},
 							json: () => {
@@ -109,10 +115,8 @@ router.post('/new', (req, res, next) => {
 router.all('/new', (req, res, next) => {
 	res.format({
 		html: () => {
-			res.render('create_edit', {
+			res.render('create', {
 				h1: req.h1,
-				user: {},
-				action: "/sessions/new"
 			})
 		},
 		json: () => {
@@ -123,10 +127,16 @@ router.all('/new', (req, res, next) => {
 	})
 })
 
-//-----DECONNEXION
+//------ PAGE GESTION DE COMPTE -------
 
-router.get('/disconnect', (req, res, next) => {
+router.use('/manage', require('./manage'))
+
+
+//-----DECONNEXION-----
+
+router.post('/disconnect', (req, res, next) => {
 	res.clearCookie('accessToken')
+	Session.delete(req.token)
 	res.redirect(301, './')
 })
 

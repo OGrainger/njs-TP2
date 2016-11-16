@@ -46,7 +46,7 @@ app.use(express.static(path.join(__dirname, 'assets')))
 db.open('data.db').then(() => {
   Promise.all([
     db.run("CREATE TABLE IF NOT EXISTS users (pseudo, password, teamName, email, firstname, lastname, createdAt, updatedAt)"),
-    db.run("CREATE TABLE IF NOT EXISTS teams (teamName, password, createdAt)")
+    db.run("CREATE TABLE IF NOT EXISTS teams (teamName, password, admin, createdAt)")
   ])
 }).catch((err) => {
 	console.log('ERR > ', err)
@@ -54,12 +54,12 @@ db.open('data.db').then(() => {
 
 //middleware SessionController : contrôle de la session
 app.use(function (req, res, next) {
-  let token = Session.getToken(req.cookies.accessToken, req.headers.accessToken)
-	Session.get(token)
+  req.token = Session.getToken(req.cookies.accessToken, req.headers.token)
+	Session.get(req.token)
 		.then((session) => {
 			if (session == null) {
 				// Si la promesse ne renvoie aucune correspondance entre le token (s'il existe) et la moindre session dans la db Redis
-				Session.delete(token)
+				Session.delete(req.token)
         req.isConnected = false
 				res.format({
 					html: () => {
@@ -72,6 +72,7 @@ app.use(function (req, res, next) {
 				})
 			} else {
         req.isConnected = true
+        req.pseudo = session
 				next()
 			}
 		}).catch(next)
