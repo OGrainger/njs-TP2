@@ -1,209 +1,126 @@
 const router = require('express').Router()
 const db = require('sqlite')
 const Session = require('../models/session')
-const Team = require('../models/team')
-const bcrypt = require('bcrypt')
+//Module mongoose
+var mongoose = require('mongoose');
 
-//middleware de recup d'informations lié au user
-router.all('*', (req, res, next) => {
-	req.displayError = ''
-	req.json = ''
-	let d = new Date()
-	let dateNow = d.toLocaleString().replace(" ", " à ")
-		//JSON d'infos
-	req.team = {}
-	if (req.user.teamName == '') {
-		//Si le user n'est associé à aucune team (ce qui permet de diplay la colonne de login/create)
-		req.team.isConnectedToTeam = false
-		next()
-	} else {
-		req.team.isConnectedToTeam = true
-		Promise.all([
-			//Liste des membres de l'équipe
-			Team.getTeamMembers(req.user.teamName),
-			//Infos de la team
-			Team.get(req.user.teamName)
-		]).then((results) => {
-			req.team.teamMembers = results[0]
-			req.team.info =  results[1]
-			if (req.team.info.admin == req.user.pseudo) {
-				//Est ce que le user est l'admin de la team (créateur de la team)
-				req.team.isAdmin = true
-				next()
-			} else {
-				req.team.isAdmin = false
-				next()
-			}
-		})
-	}
-})
 
-//POST Login de team
-router.post('/teams/login', (req, res, next) => {
-	if (req.team.isConnectedToTeam == true) {
-		req.json = "Vous êtes déjà associé à une team"
-		next()
-	} else if (typeof req.body.teamName == 'undefined' || typeof req.body.password == 'undefined') {
-		req.json = "Il manque un argument"
-		next()
-	} else if (req.body.password == '' || req.body.teamName == '') {
-		req.displayError = "Au moins un champ est vide"
-		req.json = req.displayError
-		next()
-	} else {
-		Team.get(req.body.teamName).then((team) => {
-			if (typeof team == 'undefined') {
-				req.displayError = "Cette équipe n'existe pas"
-				req.json = req.displayError
-				next()
-			} else if (bcrypt.compareSync(req.body.password, team.password)) {
-				Team.addMember(req.user.pseudo, team.teamName)
-				res.redirect('../')
-			} else {
-				req.displayError = "Mot de passe incorrect"
-				req.json = req.displayError
-				next()
-			}
-		})
-	}
-})
+//connection à la base de données todo
+mongoose.connect('mongodb://localhost/todo', function(err) {
+  if (err) { throw err; }
+  console.log("Connecté à la base de données 'todo'");
+});
 
-//POST Creation de team
-router.post('/teams/create', (req, res, next) => {
-	if (req.team.isConnectedToTeam == true) {
-		req.json = "Vous êtes déjà associé à une team"
-		next()
-	} else if (typeof req.body.teamName == 'undefined' || typeof req.body.password == 'undefined' || typeof req.body.confirmPassword == 'undefined') {
-		req.json = "Il manque un argument"
-		next()
-	} else if (req.body.password == '' || req.body.teamName == '' || req.body.confirmPassword == '') {
-		req.displayError = "Au moins un champ est vide"
-		req.json = req.displayError
-		next()
-	} else {
-		Team.get(req.body.teamName).then((team) => {
-			if (typeof team !== 'undefined') {
-				req.displayError = "Ce nom est déjà attribué à une autre équipe"
-				req.json = req.displayError
-				next()
-			} else if (req.body.password !== req.body.confirmPassword) {
-				req.displayError = "Les mots de passe ne correspondent pas"
-				req.json = req.displayError
-				next()
-			} else {
-				let params = {
-					teamName: req.body.teamName,
-					password: req.body.password,
-				}
-				Team.insert(req.user.pseudo, params)
-				res.redirect('../')
-			}
-		})
-	}
-})
 
-//POST de leave team
-router.post('/teams/quit', (req, res, next) => {
-	if (req.team.isConnectedToTeam == false) {
-		req.json = "Vous n'êtes pas associé à une team"
-		next()
-	} else {
-		Team.quit(req.user.pseudo)
-		res.redirect('../')
-	}
-})
-
-//POST de suppression de team
-router.post('/teams/delete', (req, res, next) => {
-	if (req.team.isConnectedToTeam == false) {
-		req.json = "Vous n'êtes pas associé à une team"
-		next()
-	} else if (req.team.isAdmin == false) {
-		req.json = "Vous n'êtes pas l'admin"
-		next()
-	} else {
-		Team.delete(req.user.teamName)
-		res.redirect('../')
-	}
-})
-
-//---
-
-router.post('/complete', (req, res, next) => {
-	let todoId = req.body.todoId
-		// mettre la todo en "complétée" avec mangoose => Mettre une heure à la colonne completedAt
-	next()
-})
-
-router.post('/undo', (req, res, next) => {
-	let todoId = req.body.todoId
-	// Enlever la mention "complétée" => Mettre 0 à la colonne completedAt
-	next()
-})
-
-router.post('/delete', (req, res, next) => {
-	// Supprimer la todo
-	let todoId = req.body.todoId
-	next()
-})
-
-router.post('/new', (req, res, next) => {
-	let message = req.body.message
-	// Ajoute la todo perso
-	next()
-})
-
-router.post('/teams/new', (req, res, next) => {
-	let message = req.body.message
-	let forPseudo = req.body.for
-	// Ajoute la todo de team
-	next()
+router.get('/', (req, res, next) => {
+    console.log("DEBUG OK")
+    next()
 })
 
 
-router.all('*', (req, res, next) => {
-	let todolistPerso = [{
-		"todoId": 9350158710837520,
-		"message": "zrhgpiuhgpiaubiaugb",
-		"completedAt": 0
-	}, {
-		"todoId": 097087,
-		"message": "ijoij",
-		"completedAt": "34/01/13"
-	}, {
-		"todoId": 110857,
-		"message": "iuhfiuha",
-		"completedAt": 0
-	}]
+var todoSchema = new mongoose.Schema({
+  pseudo: String,
+  message:String,
+  createdAt: { type : Date, default : Date.now },
+  terminatedAt: { type : Date, default : Date.now }
+});
 
-	let todolistTeam = [{
-		"todoId": 09870958695,
-		"message": "zrhgpiuhgpiaubiaugb",
-		"by": "Oscar",
-		"for": "Axelle",
-		"completedAt": 0
-	}, {
-		"todoId": 8768956895,
-		"message": "ijoij",
-		"by": "Axelle",
-		"for": "Oscar",
-		"completedAt": "34/01/13"
-	}]
-	res.format({
-		html: () => {
-			res.render('todo.ejs', {
-				error: req.displayError,
-				todolistPerso: todolistPerso,
-				todolistTeam: todolistTeam,
-				isConnectedToTeam: req.team.isConnectedToTeam,
-				isAdmin: req.team.isAdmin,
-				teamMembers: req.team.teamMembers
-			})
-		},
-		json: () => {
-			res.send(req.json)
-		}
-	})
+var Todo = mongoose.model('todo', todoSchema)
+
+
+
+/* On ajoute un élément à la todolist */
+router.post('/ajouter/', (req, res, next) => {
+    if (req.body.newtodo != '') {
+        Session.checkAccess(req.cookies.accessToken).then((result) => {
+            if (result !== false) {
+                console.log("Ajout d'une todo, redirection")
+                let d = new Date()
+                let dateNow = d.toLocaleDateString()
+                require('crypto').randomBytes(48, function(err, buffer) {
+                  var todo = new Todo ({                            //on peuple le model
+                    pseudo: req.user.pseudo,
+                    message: req.body.message,
+                    createdAt: dateNow,
+                  });
+                  Todo.save(function (err) {                        //on sauvegarde le model dans la abase
+                    if (err) {
+                      return err;
+                    }
+                    else {
+                     console.log("Post saved");
+                    }
+                });
+                //db.run("INSERT INTO todos VALUES (?, ?, ?, ?, ?, ?)", buffer.toString('hex'), result.userId, req.body.newtodo, dateNow, dateNow, 0)
+                res.redirect('/')
+                })
+            } else {
+                console.log('Acces refusé')
+                let error = new Error('Forbidden')
+                error.status = 403
+                next(error)
+            }
+        })
+    } else {
+        console.log('Todo vide')
+        res.redirect('/')
+    }
 })
+
+
+/*//modification todo
+router.get('/completer/:todoId', (req, res, next) => {
+    Session.checkAccess(req.cookies.accessToken).then((resultAccess) => {
+        if (resultAccess !== false) {
+            let checkVars = [req.cookies.accessToken, req.params.todoId]
+            Session.checkAccessOfTodo(checkVars).then((resultTodo) => {
+                if (resultTodo !== false) {
+                    let d = new Date()
+                    let dateNow = d.toLocaleString()
+                    console.log("Todo fini : ", req.params.todoId)
+                    db.run("UPDATE todos SET completedAt = ? WHERE todoId = ?", dateNow, req.params.todoId)
+                    res.redirect('/')
+                } else {
+                    console.log('Accès refusé à ce todo')
+                    let error = new Error('Forbidden')
+                    error.status = 403
+                    next(error)
+                }
+
+            })
+        } else {
+            console.log('Accès refusé')
+            let error = new Error('Forbidden')
+            error.status = 403
+            next(error)
+        }
+    })
+})
+
+//supprimer todo
+router.get('/supprimer/:todoId', (req, res, next) => {
+    Session.checkAccess(req.cookies.accessToken).then((resultAccess) => {
+        if (resultAccess !== false) {
+            let checkVars = [req.cookies.accessToken, req.params.todoId]
+            Session.checkAccessOfTodo(checkVars).then((resultTodo) => {
+                if (resultTodo !== false) {
+                    db.run("DELETE FROM todos WHERE todoId = ?", req.params.todoId)
+                    console.log("todo supprimé : ", req.params.todoId)
+                    res.redirect('/')
+                } else {
+                    console.log('Accès refusé à ce todo')
+                    let error = new Error('Forbidden')
+                    error.status = 403
+                    next(error)
+                }
+            })
+        } else {
+            console.log('Accès refusé')
+            let error = new Error('Forbidden')
+            error.status = 403
+            next(error)
+        }
+    })
+})*/
 
 module.exports = router
