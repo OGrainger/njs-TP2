@@ -3,12 +3,17 @@
 TP avec Express, ioredis et mangoose
 
 ##Préparation
+Installez les packages avec la commande suivante (en étant dans le dossier du projet) :
+`npm install`
 
 Installez redis
-Lancez un serveur redis avec la commande suivante :
+Lancez un serveur redis avec
 `redis-server`
 
-#Perso
+Dans un nouvel onglet de console, lancez le serveur avec
+`node app.js`
+
+#Personel
 
 ##A faire
 

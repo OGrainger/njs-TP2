@@ -8,16 +8,16 @@
   <h1><%= h1 %></h1>
   <form action="/sessions/new" method = "post">
     Pseudo :<br>
-    <input type="text" name="pseudo" autofocus>
+    <input type="text" name="pseudo" autofocus required>
     <br><br>
     Mot de passe :<br>
-    <input type="password" name="password">
+    <input type="password" name="password" required>
     <br><br>
     Confirmez votre mot de passe :<br>
-    <input type="password" name="confirmPassword">
+    <input type="password" name="confirmPassword" required>
     <br><br>
     Email :<br>
-    <input type="mail" name="email">
+    <input type="mail" name="email" required>
     <br><br>
     Prénom :<br>
     <input type="text" name="firstname">

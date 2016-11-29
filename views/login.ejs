@@ -8,16 +8,16 @@
   <h1><%=h1%></h1>
   <form action="/sessions" method = "post">
     Pseudo :<br>
-    <input type="text" autofocus name="pseudo">
+    <input type="text" autofocus name="pseudo" required>
     <br><br>
     Mot de passe :<br>
-    <input type="password" name="password">
+    <input type="password" name="password" required>
     <br>
     <input type="submit" value="Login">
   </form>
   <br>
   <form action="/sessions/new"><input type="submit" value="Nouveau ?" /></form>
-  
+
   <div id="easterEgg">
     <a href = "https://www.youtube.com/watch?v=RMICTAl4LCg&list=PLjrhosP-Fp_p19kteSIowkJOaRfgt6N81&index=24">O</a>
   </div>

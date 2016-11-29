@@ -39,6 +39,7 @@ assets/css/*.css
 
 #sqlite files
 *.db
+*.rdb
 
 #google docs
 *.gdoc
