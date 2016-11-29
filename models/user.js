@@ -3,18 +3,12 @@ const bcrypt = require('bcrypt')
 
 module.exports = {
 
+	//Retourne les infos à partir du pseudo
 	get: (pseudo) => {
 		return db.get("SELECT * FROM users WHERE pseudo = ?", pseudo)
 	},
 
-	count: () => {
-		return db.get('SELECT COUNT(*) as count FROM users')
-	},
-
-	getAll: (limit, offset) => {
-		return db.all('SELECT * FROM users LIMIT ? OFFSET ?', limit, offset)
-	},
-
+	//Insert un nouvel utilisateur
 	insert: (params) => {
 		const saltRounds = 10
 		let hash = bcrypt.hashSync(params.password, saltRounds)
@@ -23,6 +17,7 @@ module.exports = {
 		return db.run("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)", params.pseudo, hash, '', params.email, params.firstname, params.lastname, dateNow, dateNow)
 	},
 
+	//Met à jour un utilisateur
 	update: (pseudo, params) => {
 		let d = new Date()
 		let dateNow = d.toLocaleString()
@@ -42,6 +37,7 @@ module.exports = {
 		return db.run.apply(db, dbArgs)
 	},
 
+	//Supprime un utilisateur
 	delete: (pseudo) => {
 		return db.run('DELETE FROM users WHERE pseudo = ?', pseudo)
 	}

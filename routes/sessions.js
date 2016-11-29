@@ -4,12 +4,16 @@ const db = require('sqlite')
 const bcrypt = require('bcrypt')
 const Session = require('../models/session')
 
+//------PAGE LOGIN-----------
+
+//Affichage (h1 et JSON) de base de la page login
 router.get('/', (req, res, next) => {
 	req.h1 = "login"
 	req.jsonError = "Bad request"
 	next()
 })
 
+//Post pour tenter de se login
 router.post('/', (req, res, next) => {
 	User.get(req.body.pseudo)
 		.then((user) => {
@@ -51,6 +55,7 @@ router.post('/', (req, res, next) => {
 		})
 })
 
+//Quelque soit la demande (get ou post), affichage de la page login
 router.all('/', (req, res, next) => {
 	res.format({
 		html: () => {
@@ -68,12 +73,14 @@ router.all('/', (req, res, next) => {
 
 //-------- PAGE NOUVEL UTILISATEUR --------
 
+//Préparation de l'affichage de la page
 router.get('/new', (req, res, next) => {
 	req.h1 = "Nouvel utilisateur"
 	req.jsonError = "bad request"
 	next()
 })
 
+//Post de création d'utilisateur
 router.post('/new', (req, res, next) => {
 	if (req.body.pseudo === "" || req.body.password === "" || req.body.confirmPassword === "" || req.body.email === "" || req.body.firstname === "" || req.body.lastname === "") {
 		// Si un champ est vide, on réactualise avec une note
@@ -112,6 +119,7 @@ router.post('/new', (req, res, next) => {
 	}
 })
 
+//Affichage de la page création d'utilisateur
 router.all('/new', (req, res, next) => {
 	res.format({
 		html: () => {
@@ -129,11 +137,13 @@ router.all('/new', (req, res, next) => {
 
 //------ PAGE GESTION DE COMPTE -------
 
+//Utilisation de la route manage pour la page gestion de compte
 router.use('/manage', require('./manage'))
 
 
 //-----DECONNEXION-----
 
+//Ce post est utilisé dans la page /todo, pour se déconnecter
 router.post('/disconnect', (req, res, next) => {
 	res.clearCookie('accessToken')
 	Session.delete(req.token)

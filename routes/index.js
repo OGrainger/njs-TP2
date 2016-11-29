@@ -2,6 +2,7 @@ const router = require('express').Router()
 const express = require('express')
 const User = require('../models/user')
 
+//Middleware de récuperation des infos de l'utilisateur (s'il est connecté) et stockage dans req.user
 router.all('*', (req, res, next) => {
 	if (req.isConnected == true) {
 		User.get(req.pseudo).then((user) => {
@@ -13,7 +14,7 @@ router.all('*', (req, res, next) => {
 	}
 })
 
-
+//Si l'utilisateur est connecté, on le redirige de base vers /todo. Sinon, vers /sessions
 router.get('/', (req, res, next) => {
 	if (req.isConnected == true) {
 		res.redirect('/todo')
@@ -31,6 +32,7 @@ router.get('/', (req, res, next) => {
 	}
 })
 
+//Si l'utilisateur est dans /todo (et plus, tel quel /todo/delete), check de connexion
 router.all('/todo*', (req, res, next) => {
 	if (req.isConnected == true) {
     next()
@@ -47,7 +49,7 @@ router.all('/todo*', (req, res, next) => {
 		})
   }
 })
-
+//Si l'utilisateur est dans /sessions/manage (et plus, tel quel /sessions/manage/edit), check de connexion
 router.all('/sessions/manage*', (req, res, next) => {
 	if (req.isConnected == true) {
     next()

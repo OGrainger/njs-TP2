@@ -4,12 +4,14 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const Session = require('../models/session')
 
+//On set le h1 et le json par défaut de la route
 router.all('/*', (req, res, next) => {
 	req.h1 = "Gestionnaire de compte"
 	req.json = "Bad request"
 	next()
 })
 
+//Post d'édition d'utilisateur
 router.post('/', (req, res, next) => {
 	let params = {}
 	req.json = []
@@ -86,6 +88,7 @@ router.post('/', (req, res, next) => {
 	})
 })
 
+//Préparation de l'affiche de la route
 router.all('/', (req, res, next) => {
 	req.user.createdAt = req.user.createdAt.replace(" ", " à ")
 	req.user.updatedAt = req.user.updatedAt.replace(" ", " à ")
@@ -104,6 +107,7 @@ router.all('/', (req, res, next) => {
 	})
 })
 
+//Post de suppression d'utilisateur
 router.post('/delete', (req, res, next) => {
 	if (bcrypt.compareSync(req.body.password, req.user.password)) {
 		console.log("---\nUtilisateur supprimé\nPseudo : ", req.user.pseudo, "\n---")
@@ -118,6 +122,7 @@ router.post('/delete', (req, res, next) => {
 	}
 })
 
+//petite fonction pour check si un object est vide
 function isEmptyObject(obj) {
 	return !Object.keys(obj).length;
 }
