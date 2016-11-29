@@ -23,11 +23,11 @@ Dans un nouvel onglet de console, lancez le serveur avec
 
 ###Accès
 Accedez au serveur à l'adresse suivante :
-[a link](localhost:8080)
+*localhost:8080*
 D'autres personnes peuvent accéder à votre serveur en local ainsi :
-[a link](<votre_IP_locale>:8080)
+*[<votre_IP_locale>:8080*
 En forwardant le port 8080, n'importe qui peut accéder à votre serveur ainsi :
-[a link](<votre_IPv4>:8080)
+*<votre_IPv4>:8080*
 
 ###Login & équipes
 Par défaut, vous vous trouverez devant une page de connexion. Pour votre première utilisation, il vous faudra créer un nouveau compte. Pour information, une session est périmée 15 minutes après la connexion.
