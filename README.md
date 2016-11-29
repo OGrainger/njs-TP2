@@ -23,18 +23,20 @@ Dans un nouvel onglet de console, lancez le serveur avec
 
 ###Accès
 Accedez au serveur à l'adresse suivante :
-*localhost:8080*
+**localhost:8080**
 D'autres personnes peuvent accéder à votre serveur en local ainsi :
-*[<votre_IP_locale>:8080*
+**votre_IP_locale:8080**
 En forwardant le port 8080, n'importe qui peut accéder à votre serveur ainsi :
-*<votre_IPv4>:8080*
+**votre_IPv4:8080**
 
 ###Login & équipes
 Par défaut, vous vous trouverez devant une page de connexion. Pour votre première utilisation, il vous faudra créer un nouveau compte. Pour information, une session est périmée 15 minutes après la connexion.
 Une fois connecté, l'affichage est scindé en deux parties. A gauche, la partie équipe et à droite la partie personnelle.
 Vous pouvez rejoindre une équipe ou en créer une nouvelle. Le créateur est alors l'admin de l'équipe. Il peut alors la supprimer.
+
 Vous pouvez ajouter une tâche en équipe ou personnelle. Pour les tâches en équipe, vous pouvez l'assigner à une personne ou toute l'équipe. Les tâches s'affichent en liste et vous pouvez soit la marquer comme terminé, ou la supprimer.
 Il est aussi possible de la re-rendre disponible.
+
 Dans cette page, vous avez aussi accès à un gestionnaire de compte pour modifier vos informations.
 
 #Personel
