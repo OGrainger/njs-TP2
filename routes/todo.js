@@ -93,6 +93,7 @@ router.post('/teams/create', (req, res, next) => {
 				req.displayError = "Les mots de passe ne correspondent pas"
 				req.json = req.displayError
 				next()
+			} else {
 				let params = {
 					teamName: req.body.teamName,
 					password: req.body.password,
