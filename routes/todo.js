@@ -158,34 +158,56 @@ router.post('/teams/delete', (req, res, next) => {
 // })
 
 router.post('/complete', (req, res, next) => {
-	let todoId = req.body.todoId
-		// mettre la todo en "complétée" avec mangoose => Mettre une heure à la colonne completedAt
-	next()
+  let todoId = req.body.todoId
+  // mettre la todo en "complétée" avec mangoose => Mettre une heure à la colonne completedAt
+	ModelTodo.compTodo(todoId).then (() => {
+    res.redirect('/')
+  }).catch((err) => {
+    res.redirect('/')
+  })
+  next()
 })
 
 router.post('/undo', (req, res, next) => {
 	let todoId = req.body.todoId
 		// Enlever la mention "complétée" => Mettre 0 à la colonne completedAt
+  Model.Todo.undoTodo (todoId).then(() => {
+		res.redirect('/')
+	}).catch((err) => {
+		res.redirect('/')
+	})
 	next()
 })
 
-router.post('/delete', (req, res, next) => {
-	// Supprimer la todo
-	let todoId = req.body.todoId
-	next()
+router.post('/delete)', (req, res, next) => {
+  let todoId = req.body.todoId
+  // Supprimer la todo
+  ModelTodo.suppTodo (todoId).then(() => {
+    res.redirect('/')
+  }).catch((err) => {
+    res.redirect('/')
+  })
+  next()
 })
 
 router.post('/new', (req, res, next) => {
 	let message = req.body.message
+	let pseudo = req.user.pseudo
 		// Ajoute la todo perso
+  ModelTodo.addTodo(pseudo, message).then((result) => {
+    res.redirect('/')
+  }).catch((err) => {
+    res.redirect('/')
+  })
 	next()
 })
 
 router.post('/teams/new', (req, res, next) => {
 	let message = req.body.message
+	//let pseudo = req.user.pseudo
 	let forPseudo = req.body.for
 		// Ajoute la todo de team
-	next()
+  next()
 })
 
 //---FIN DE LA ZONE DE TRAVAIL DE CLEM------------------------------------------------------------------------------
@@ -209,13 +231,13 @@ router.all('*', (req, res, next) => {
 	let todolistTeam = [{
 		"todoId": 09870958695,
 		"message": "zrhgpiuhgpiaubiaugb",
-		"by": "Oscar",
+		"pseudo": "Oscar",
 		"for": "Axelle",
 		"completedAt": 0
 	}, {
 		"todoId": 8768956895,
 		"message": "ijoij",
-		"by": "Axelle",
+		"pseudo": "Axelle",
 		"for": "Oscar",
 		"completedAt": "34/01/13"
 	}]
