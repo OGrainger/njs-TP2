@@ -55,23 +55,23 @@
         <th></th>
       </tr>
       <% for (i=0; i < todolistTeam.length; i++) {%>
-        <% if (todolistTeam[i].completedAt == 0) {%>
+        <% if (todolistTeam[i].completedAt == "0") {%>
           <tr>
             <td>
             <form method="post" action="/todo/complete" class="inline">
-            <input type="hidden" name="todoId" value="<%=todolistTeam[i].todoId%>">
+            <input type="hidden" name="_id" value="<%=todolistTeam[i]._id%>">
             <button type="submit" name="submit_param" value="submit_value" class="link-button">
             ☐
             </button>
             </form>
             </td>
             <td><%= todolistTeam[i].message %></td>
-            <td><%=todolistTeam[i].by%> </td>
-            <td><%=todolistTeam[i].for%> </td>
+            <td><%=todolistTeam[i].pseudo%> </td>
+            <td><%=todolistTeam[i].forPseudo%> </td>
             <td style="text-shadow: 1px 1px grey;"><i>☜ Just do it !</i></td>
             <td>
             <form method="post" action="/todo/delete" class="inline">
-            <input type="hidden" name="todoId" value="<%=todolistTeam[i].todoId%>">
+            <input type="hidden" name="_id" value="<%=todolistTeam[i]._id%>">
             <button type="submit" name="submit_param" value="submit_value" class="link-button">
             ✕
             </button>
@@ -81,23 +81,23 @@
         <% } %>
       <% } %>
       <% for (i=0; i < todolistTeam.length; i++) {%>
-        <% if (todolistTeam[i].completedAt !== 0) {%>
+        <% if (todolistTeam[i].completedAt !== "0") {%>
           <tr>
             <td>
             <form method="post" action="/todo/undo" class="inline">
-            <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+            <input type="hidden" name="_id" value="<%=todolistTeam[i]._id%>">
             <button type="submit" name="submit_param" value="submit_value" class="link-button">
             ☑
             </button>
             </form>
             </td>
             <td><%= todolistTeam[i].message %></td>
-            <td><%=todolistTeam[i].by%> </td>
-            <td><%=todolistTeam[i].for%> </td>
+            <td><%=todolistTeam[i].pseudo%> </td>
+            <td><%=todolistTeam[i].forPseudo%> </td>
             <td><%= todolistTeam[i].completedAt %></td>
             <td>
             <form method="post" action="/todo/delete" class="inline">
-            <input type="hidden" name="todoId" value="<%=todolistTeam[i].todoId%>">
+            <input type="hidden" name="_id" value="<%=todolistTeam[i]._id%>">
             <button type="submit" name="submit_param" value="submit_value" class="link-button">
             ✕
             </button>
@@ -109,7 +109,7 @@
     </table>
     </div>
     <div class="todoBandeauBottom">
-    <form style="text-align:left;padding:10px" action="/todo/teams/new" method = "post">
+    <form style="text-align:left;padding:10px" action="/todo/teamNew" method = "post">
       Nouvelle tâche :<input type="text" name="message" required />
       <br />
       Pour : <br />
@@ -149,11 +149,11 @@
           <th></th>
         </tr>
         <% for (i=0; i < todolistPerso.length; i++) {%>
-          <% if (todolistPerso[i].completedAt == 0) {%>
+          <% if (todolistPerso[i].completedAt == "0") {%>
             <tr>
               <td>
               <form method="post" action="/todo/complete" class="inline">
-              <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+              <input type="hidden" name="_id" value="<%=todolistPerso[i]._id%>">
               <button type="submit" name="submit_param" value="submit_value" class="link-button">
               ☐
               </button>
@@ -163,7 +163,7 @@
               <td style="text-shadow: 1px 1px grey;"><i>☜ Just do it !</i></td>
               <td>
               <form method="post" action="/todo/delete" class="inline">
-              <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+              <input type="hidden" name="_id" value="<%=todolistPerso[i]._id%>">
               <button type="submit" name="submit_param" value="submit_value" class="link-button">
               ✕
               </button>
@@ -173,11 +173,11 @@
           <% } %>
         <% } %>
         <% for (i=0; i < todolistPerso.length; i++) {%>
-          <% if (todolistPerso[i].completedAt !== 0) {%>
+          <% if (todolistPerso[i].completedAt !== "0") {%>
             <tr>
               <td>
               <form method="post" action="/todo/undo" class="inline">
-              <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+              <input type="hidden" name="_id" value="<%=todolistPerso[i]._id%>">
               <button type="submit" name="submit_param" value="submit_value" class="link-button">
               ☑
               </button>
@@ -187,7 +187,7 @@
               <td><%= todolistPerso[i].completedAt %></td>
               <td>
               <form method="post" action="/todo/delete" class="inline">
-              <input type="hidden" name="todoId" value="<%=todolistPerso[i].todoId%>">
+              <input type="hidden" name="_id" value="<%=todolistPerso[i]._id%>">
               <button type="submit" name="submit_param" value="submit_value" class="link-button">
               ✕
               </button>

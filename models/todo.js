@@ -1,73 +1,87 @@
 //Module mongoose
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 
 //connection à la base de données todo
-mongoose.connect('mongodb://localhost/todolistPerso', function(err) {
+mongoose.connect('mongodb://localhost/todolist', function(err) {
   if (err) { throw err; }
-  console.log("Connecté à la base de données 'todolistPerso'");
-});
-mongoose.connect('mongodb://localhost/todolistTeam', function(err) {
-  if (err) { throw err; }
-  console.log("Connecté à la base de données 'todolistTeam'");
+  console.log("Connecté à la base de données 'todolist'");
 });
 
-var todolistPersoSchema = new mongoose.Schema({
+
+var todolistSchema = new mongoose.Schema({
   pseudo: String,
   message:String,
-  createdAt: { type : Date, default : Date.now },
-  terminatedAt: {type : Date, default : 0}
+  team: { type : String, default : '' },
+  forPseudo: { type : String, default : '' },
+  createdAt: { type : String, default : 0 },
+  completedAt: {type : String, default : 0}
 });
 
-var todolistTeamSchema = new mongoose.Schema({
-  pseudo: String,
-  team:String,
-  for:String,
-  message:String,
-  createdAt: { type : Date, default : Date.now },
-  terminatedAt: {type : Date, default : 0}
-});
+var Todo = mongoose.model('todo', todolistSchema)
 
-var Todo = mongoose.model('todo', todolistPersoSchema)
-
-var TodoTeam = mongoose.model('todoTeam', todolistTeamS)
 
 
 module.exports = {
-  addTodo: (pseudo, message)=>{
+
+  getTodosPerso: (usr)=>{
+    return Todo.find({pseudo: usr, team: ''})
+  },
+
+  getTodosTeam: (tm)=>{
+    return Todo.find({team: tm})
+  },
+
+  addTodoPerso: (pseudo, message)=>{
+
+    let d = new Date()
+    let dateNow = d.toLocaleString()
+
     var todo = new Todo ({
       pseudo: pseudo,
       message: message,
-      createdAt: Date.now,
-      terminatedAt: 0
+      createdAt: dateNow,
     });
    return new Promise ((resolve, reject)=>{
-      return resolve(Todo.save())
+      return resolve(todo.save())
     })
   },
 
-  suppTodo: (pseudoId) => {
+  addTodoTeam: (pseudo, message, frpsd, tm)=>{
+
+    let d = new Date()
+    let dateNow = d.toLocaleString()
+
+    var todo = new Todo ({
+      pseudo: pseudo,
+      message: message,
+      team: tm,
+      forPseudo: frpsd,
+      createdAt: dateNow,
+      completedAt: 0
+    });
+   return new Promise ((resolve, reject)=>{
+      return resolve(todo.save())
+    })
+  },
+
+  suppTodo: (todoId) => {
     return new Promise ((resolve, reject)=>{
-       return resolve(Todo.remove({_id:pseudoId}))
+       return resolve(Todo.remove({_id:todoId}))
     })
   },
 
-  compTodo: (pseudoId) => {
-    Todo.findById(pseudoId, function(err, todo){
-      todo.createdAt=Date.now
-      return new promise ((resolve, reject) => {
-        return resolve(todo.save())
-      }
-    )}
-    )
+  compTodo: (todoId) => {
+    let d = new Date()
+    let dateNow = d.toLocaleString()
+    return new Promise ((resolve, reject) => {
+      return resolve(Todo.update({_id:todoId}, {completedAt: dateNow}))
+    })
   },
 
-  undoTodo: (pseudoId) => {
-    Todo.findById(pseudoId, function(err, todo){
-      todo.completedAt=0
-      return new promise ((resolve, reject) => {
-        return resolve(todo.save())
-      })
+  undoTodo: (todoId) => {
+    return new Promise ((resolve, reject) => {
+      return resolve(Todo.update({_id:todoId}, {completedAt: 0}))
     })
   }
 
@@ -78,7 +92,7 @@ module.exports = {
   //     forwho:forwho,
   //     message: message,
   //     createdAt: Date.now,
-  //     terminatedAt: 0
+  //     completedAt: 0
   //   });
   //  return new Promise ((resolve, reject)=>{
   //     return resolve(Todo.save())

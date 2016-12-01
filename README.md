@@ -24,8 +24,10 @@ Dans un nouvel onglet de console, lancez le serveur avec
 ###Accès
 Accedez au serveur à l'adresse suivante :
 **localhost:8080**
+
 D'autres personnes peuvent accéder à votre serveur en local ainsi :
 **votre_IP_locale:8080**
+
 En forwardant le port 8080, n'importe qui peut accéder à votre serveur ainsi :
 **votre_IPv4:8080**
 

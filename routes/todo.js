@@ -132,128 +132,84 @@ router.post('/teams/delete', (req, res, next) => {
 
 //---ZONE DE TRAVAIL DE CLEM------------------------------------------------------------------------------
 
-//Ce que t'avais déjà fait
-/* On ajoute un élément à la todolist */
-// router.post('/ajouter/', (req, res, next) => {
-// 	if (req.body.newtodo != '') {
-// 		Session.checkAccess(req.cookies.accessToken).then((result) => {
-// 			if (result !== false) {
-// 				console.log("Ajout d'une todo, redirection")
-// 				ModelTodo.addTodo(req.user.pseudo, req.body.message).then((result) => {
-// 					res.redirect('/')
-// 				}).catch((err) => {
-// 					res.redirect('/')
-// 				})
-// 			} else {
-// 				console.log('Acces refusé')
-// 				let error = new Error('Forbidden')
-// 				error.status = 403
-// 				next(error)
-// 			}
-// 		})
-// 	} else {
-// 		console.log('Todo vide')
-// 		res.redirect('/')
-// 	}
-// })
 
 router.post('/complete', (req, res, next) => {
-  let todoId = req.body.todoId
+  let _id = req.body._id
   // mettre la todo en "complétée" avec mangoose => Mettre une heure à la colonne completedAt
-	ModelTodo.compTodo(todoId).then (() => {
-    res.redirect('/')
-  }).catch((err) => {
-    res.redirect('/')
-  })
-  next()
+	ModelTodo.compTodo(_id).then(() => {
+	  next()
+	})
 })
 
 router.post('/undo', (req, res, next) => {
-	let todoId = req.body.todoId
+	let _id = req.body._id
 		// Enlever la mention "complétée" => Mettre 0 à la colonne completedAt
-  Model.Todo.undoTodo (todoId).then(() => {
-		res.redirect('/')
-	}).catch((err) => {
-		res.redirect('/')
+  ModelTodo.undoTodo(_id).then(() => {
+		next()
 	})
-	next()
 })
 
-router.post('/delete)', (req, res, next) => {
-  let todoId = req.body.todoId
+router.post('/delete', (req, res, next) => {
+  let _id = req.body._id
   // Supprimer la todo
-  ModelTodo.suppTodo (todoId).then(() => {
-    res.redirect('/')
-  }).catch((err) => {
-    res.redirect('/')
-  })
-  next()
+  ModelTodo.suppTodo(_id).then(() => {
+	  next()
+	})
 })
 
 router.post('/new', (req, res, next) => {
 	let message = req.body.message
 	let pseudo = req.user.pseudo
 		// Ajoute la todo perso
-  ModelTodo.addTodo(pseudo, message).then((result) => {
-    res.redirect('/')
-  }).catch((err) => {
-    res.redirect('/')
+  ModelTodo.addTodoPerso(pseudo, message).then(() => {
+    next()
   })
-	next()
 })
 
-router.post('/teams/new', (req, res, next) => {
+router.post('/teamNew', (req, res, next) => {
 	let message = req.body.message
-	//let pseudo = req.user.pseudo
+	let pseudo = req.user.pseudo
 	let forPseudo = req.body.for
+	let team = req.user.teamName
 		// Ajoute la todo de team
-  next()
+	ModelTodo.addTodoTeam(pseudo, message, forPseudo, team).then(() => {
+    next()
+  })
 })
 
 //---FIN DE LA ZONE DE TRAVAIL DE CLEM------------------------------------------------------------------------------
 
+router.all('*', (req, res, next) => {
+	ModelTodo.getTodosPerso(req.user.pseudo).then((result) => {
+		req.user.todolistPerso = result
+	}).then(() => {
+		next()
+	})
+})
 
 router.all('*', (req, res, next) => {
-	let todolistPerso = [{
-		"todoId": 9350158710837520,
-		"message": "zrhgpiuhgpiaubiaugb",
-		"completedAt": 0
-	}, {
-		"todoId": 097087,
-		"message": "ijoij",
-		"completedAt": "34/01/13"
-	}, {
-		"todoId": 110857,
-		"message": "iuhfiuha",
-		"completedAt": 0
-	}]
+	ModelTodo.getTodosTeam(req.user.teamName).then((result) => {
+		req.team.todolistTeam = result
+	}).then(() => {
+		next()
+	})
+})
 
-	let todolistTeam = [{
-		"todoId": 09870958695,
-		"message": "zrhgpiuhgpiaubiaugb",
-		"pseudo": "Oscar",
-		"for": "Axelle",
-		"completedAt": 0
-	}, {
-		"todoId": 8768956895,
-		"message": "ijoij",
-		"pseudo": "Axelle",
-		"for": "Oscar",
-		"completedAt": "34/01/13"
-	}]
+router.all('*', (req, res, next) => {
+
 	res.format({
 		html: () => {
 			res.render('todo.ejs', {
 				error: req.displayError,
-				todolistPerso: todolistPerso,
-				todolistTeam: todolistTeam,
+				todolistPerso: req.user.todolistPerso,
+				todolistTeam: req.team.todolistTeam,
 				isConnectedToTeam: req.team.isConnectedToTeam,
 				isAdmin: req.team.isAdmin,
 				teamMembers: req.team.teamMembers
 			})
 		},
 		json: () => {
-			res.send(req.json)
+			res.send(req.json, req.user.todolistPerso)
 		}
 	})
 })
