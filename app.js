@@ -118,10 +118,6 @@ app.use(function(err, req, res, next) {
   })
 })
 
-//app.use('/sessions', require('./sessions'))
-
-//app.use('/todo', require('./todo'))
-
 app.listen(PORT, () => {
   console.log('Serveur démarré sur le port : ', PORT)
 })
