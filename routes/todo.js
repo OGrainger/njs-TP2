@@ -5,15 +5,12 @@ const ModelTodo = require('../models/todo')
 const Team = require('../models/team')
 const bcrypt = require('bcrypt')
 
-
-
 //middleware de recup d'informations lié au user
 router.all('*', (req, res, next) => {
+	//affichage de l'erreur (h1 en HTML)
 	req.displayError = ''
+	//JSON d'infos
 	req.json = ''
-	let d = new Date()
-	let dateNow = d.toLocaleString().replace(" ", " à ")
-		//JSON d'infos
 	req.team = {}
 	if (req.user.teamName == '') {
 		//Si le user n'est associé à aucune team (ce qui permet de diplay la colonne de login/create)
@@ -130,30 +127,31 @@ router.post('/teams/delete', (req, res, next) => {
 	}
 })
 
+//POST pour marquer une todo en complétée
 router.post('/complete', (req, res, next) => {
   let _id = req.body._id
-  // mettre la todo en "complétée" avec mangoose => Mettre une heure à la colonne completedAt
 	ModelTodo.compTodo(_id).then(() => {
 	  next()
 	})
 })
 
+//POST pour remettre une todo dans la liste des todos non complétées
 router.post('/undo', (req, res, next) => {
 	let _id = req.body._id
-		// Enlever la mention "complétée" => Mettre 0 à la colonne completedAt
   ModelTodo.undoTodo(_id).then(() => {
 		next()
 	})
 })
 
+//POST pour supprimer une todo
 router.post('/delete', (req, res, next) => {
   let _id = req.body._id
-  // Supprimer la todo
   ModelTodo.suppTodo(_id).then(() => {
 	  next()
 	})
 })
 
+//POST pour créer une nouvelle todo personelle
 router.post('/new', (req, res, next) => {
 	let message = req.body.message
 	let pseudo = req.user.pseudo
@@ -163,6 +161,7 @@ router.post('/new', (req, res, next) => {
   })
 })
 
+//POST pour créer une nouvelle todo pour l'équipe
 router.post('/teamNew', (req, res, next) => {
 	let message = req.body.message
 	let pseudo = req.user.pseudo
@@ -174,8 +173,7 @@ router.post('/teamNew', (req, res, next) => {
   })
 })
 
-
-
+//récupère toutes les todos personelles
 router.all('*', (req, res, next) => {
 	ModelTodo.getTodosPerso(req.user.pseudo).then((result) => {
 		req.user.todolistPerso = result
@@ -184,6 +182,7 @@ router.all('*', (req, res, next) => {
 	})
 })
 
+//récupère les todos de la team de l'user
 router.all('*', (req, res, next) => {
 	ModelTodo.getTodosTeam(req.user.teamName).then((result) => {
 		req.team.todolistTeam = result
@@ -192,10 +191,11 @@ router.all('*', (req, res, next) => {
 	})
 })
 
+//Affichage
 router.all('*', (req, res, next) => {
-
 	res.format({
 		html: () => {
+			//Rendu du html
 			res.render('todo.ejs', {
 				error: req.displayError,
 				todolistPerso: req.user.todolistPerso,
@@ -206,6 +206,7 @@ router.all('*', (req, res, next) => {
 			})
 		},
 		json: () => {
+			//Renvoie une liste avec les erreurs, la liste des todos perso et la liste des todos de team
 			let json = []
 			json.push(req.json)
 			json.push(req.user.todolistPerso)
