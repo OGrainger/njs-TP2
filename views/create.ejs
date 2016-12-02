@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8">
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="/css/style.css" rel="stylesheet" type="text/css">
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title><%= h1 %></title>
 </head>
-<body class="container" style = "text-align:center">
-  <h1><%= h1 %></h1>
-  <form action="/sessions/new" method = "post">
-    Pseudo :<br>
-    <input type="text" name="pseudo" autofocus required>
-    <br><br>
-    Mot de passe :<br>
-    <input type="password" name="password" required>
-    <br><br>
-    Confirmez votre mot de passe :<br>
-    <input type="password" name="confirmPassword" required>
-    <br><br>
-    Email :<br>
-    <input type="mail" name="email" required>
-    <br><br>
-    Prénom :<br>
-    <input type="text" name="firstname">
-    <br><br>
-    Nom :<br>
-    <input type="text" name="lastname">
-    <br><br>
-    <input type="reset" value="Reset">
-    <input type="submit" value="Valider">
-  </form>
-  <form action="/sessions"><input type="submit" value="retour" /></form>
-
+<body>
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <div class="container">
+    <div class="col s6 offset-s6">
+      <h1 class="header"><%=h1%></h1>
+    </div>
+    <div class="col s12">
+      <form action="/sessions/new" method = "post">
+        <span class="flow-text">Pseudo :</span>
+        <input type="text" name="pseudo" autofocus required>
+        <span class="flow-text">Mot de passe :</span>
+        <input type="password" name="password" required>
+        <span class="flow-text">Confirmez votre mot de passe :</span>
+        <input type="password" name="confirmPassword" required>
+        <span class="flow-text">Email :</span>
+        <input type="email" name="email" required>
+        <span class="flow-text">Prénom :</span>
+        <input type="text" name="firstname">
+        <span class="flow-text">Nom :</span>
+        <input type="text" name="lastname">
+        <br><br>
+        <input type="reset" class="waves-effect waves-light btn"  value="Reset">
+        <input type="submit" class="waves-effect waves-light btn"  value="Valider">
+      </form>
+      <br />
+      <form action="/sessions"><input class="waves-effect waves-light btn" type="submit" value="retour" /></form>
+      <br />
+    </div>
+  </div>
   <div id="easterEgg">
     <a href = "https://www.youtube.com/watch?v=RMICTAl4LCg&list=PLjrhosP-Fp_p19kteSIowkJOaRfgt6N81&index=24">O</a>
   </div>

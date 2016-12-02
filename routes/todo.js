@@ -122,7 +122,7 @@ router.post('/teams/delete', (req, res, next) => {
 		req.json = "Vous n'êtes pas l'admin"
 		next()
 	} else {
-		Team.delete(req.user.teamName)
+		Team.delete(req.user.teamName, req.user.pseudo)
 		res.redirect('../')
 	}
 })
@@ -202,7 +202,8 @@ router.all('*', (req, res, next) => {
 				todolistTeam: req.team.todolistTeam,
 				isConnectedToTeam: req.team.isConnectedToTeam,
 				isAdmin: req.team.isAdmin,
-				teamMembers: req.team.teamMembers
+				teamMembers: req.team.teamMembers,
+				teamName: req.user.teamName
 			})
 		},
 		json: () => {
