@@ -10,7 +10,7 @@ mongoose.connect('mongodb://localhost/todolist', function(err) {
 	console.log("Connecté à la base de données 'todolist'");
 });
 
-
+//Création de schéma mongoose
 var todolistSchema = new mongoose.Schema({
 	pseudo: String,
 	message: String,
@@ -32,25 +32,28 @@ var todolistSchema = new mongoose.Schema({
 	}
 });
 
+
+//Création du model
 var Todo = mongoose.model('todo', todolistSchema)
 
 
-
+//Apport des modules
 module.exports = {
-
+//Récup Todos perso
 	getTodosPerso: (usr) => {
 		return Todo.find({
 			pseudo: usr,
 			team: ''
 		})
 	},
-
+//Récup Todos team
 	getTodosTeam: (tm) => {
 		return Todo.find({
 			team: tm
 		})
 	},
 
+//Nouvelle todo perso
 	addTodoPerso: (pseudo, message) => {
 
 		let d = new Date()
@@ -66,6 +69,7 @@ module.exports = {
 		})
 	},
 
+//Supprime todo
 	suppTodo: (todoId) => {
 		return new Promise((resolve, reject) => {
 			return resolve(Todo.remove({
@@ -74,6 +78,7 @@ module.exports = {
 		})
 	},
 
+//Todo complétée
 	compTodo: (todoId) => {
 		let d = new Date()
 		let dateNow = d.toLocaleString()
@@ -86,6 +91,7 @@ module.exports = {
 		})
 	},
 
+//Remise d'une todo complétée dans la liste des todos non complétées
 	undoTodo: (todoId) => {
 		return new Promise((resolve, reject) => {
 			return resolve(Todo.update({
@@ -96,6 +102,7 @@ module.exports = {
 		})
 	},
 
+//Ajout d'une todo team
 	addTodoTeam: (pseudo, message, frpsd, tm) => {
 
 		let d = new Date()
