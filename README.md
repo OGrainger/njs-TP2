@@ -47,13 +47,13 @@ Dans cette page, vous avez aussi accès à un gestionnaire de compte pour modifi
 
 - [x] Architecture de la gestion de teams (1 user appartient à 1 équipe OU pas d'équipe)
 - [x] Architecture de la todolist avec système de teams - Mongoose
-- [ ] En cours - Codage du todo.js (model possible)
+- [x] En cours - Codage du todo.js (model possible)
 - [x] Codage du todo.ejs
 - [x] Optimisation du système de sessions (req? redirect? - router.all dans le "/" qui gère la page APRES le router.post > action du post > génération de page OU redirect.. Bref, à voir)
 - [x] Système de déconnexion
 - [x] Commentaires
 - [ ] readme.md
-- [ ] Beautifier / Optimisation
+- [x] Beautifier / Optimisation
 
 ##Si on a le temps
 
