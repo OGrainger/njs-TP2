@@ -28,10 +28,12 @@
           <h3 class="header">Rejoindre une équipe</h3>
           <p class="flow-text"><%=error%></p>
           <form action="/todo/teams/login" method = "post">
-            Nom de l&apos;équipe :<br>
+            <p class = "flow-text" >
+              Nom de l&apos;équipe :
+            </p><br>
             <input type="text" autofocus name="teamName" required>
             <br><br>
-            Mot de passe :<br>
+            <p class = "flow-text" >Mot de passe :</p><br>
             <input type="password" name="password" required>
             <br>
             <input class="waves-effect waves-light btn" type="submit" value="Login">
@@ -42,13 +44,13 @@
         <div class="card-panel">
           <h3 class="header">Créer une équipe</h3>
           <form action="/todo/teams/create" method = "post">
-            Nom de votre équipe :<br>
+            <p class = "flow-text" >Nom de votre équipe :</p><br>
             <input type="text" autofocus name="teamName" required>
             <br><br>
-            Mot de passe :<br>
+            <p class = "flow-text" >Mot de passe :</p><br>
             <input type="password" name="password" required>
             <br><br>
-            Confirmez le mot de passe :<br>
+            <p class = "flow-text" >Confirmez le mot de passe :</p><br>
             <input type="password" name="confirmPassword" required>
             <br>
             <input class="waves-effect waves-light btn" type="submit" value="Valider">
