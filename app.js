@@ -54,7 +54,7 @@ db.open('data.db').then(() => {
 
 //middleware SessionController : contrôle de la session
 app.use(function (req, res, next) {
-  req.token = Session.getToken(req.cookies.accessToken, req.headers.token)
+  req.token = Session.getToken(req.headers.token, req.cookies.accessToken)
 	Session.get(req.token)
 		.then((session) => {
 			if (session == null) {

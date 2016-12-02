@@ -12,9 +12,9 @@ module.exports = {
 	},
 
 	//Retourne le token suivant la méthode de connexion du user (html / JSON)
-	getToken: (tokenCookie, tokenJson) => {
+	getToken: (token1, token2) => {
 		//Condition ternaire
-		return (typeof tokenCookie == 'undefined' ? (typeof tokenJson == 'undefined' ? undefined : tokenJson) : tokenCookie)
+		return (typeof token1 == 'undefined' ? (typeof token2 == 'undefined' ? undefined : token2) : token1)
 	},
 
 	//Ajoute une session dans la base Redis avec comme clé le token, et sa valeur le pseudo. On met aussi une date d'expiration 15mn après la création de la session

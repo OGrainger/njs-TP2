@@ -130,9 +130,6 @@ router.post('/teams/delete', (req, res, next) => {
 	}
 })
 
-//---ZONE DE TRAVAIL DE CLEM------------------------------------------------------------------------------
-
-
 router.post('/complete', (req, res, next) => {
   let _id = req.body._id
   // mettre la todo en "complétée" avec mangoose => Mettre une heure à la colonne completedAt
@@ -177,7 +174,7 @@ router.post('/teamNew', (req, res, next) => {
   })
 })
 
-//---FIN DE LA ZONE DE TRAVAIL DE CLEM------------------------------------------------------------------------------
+
 
 router.all('*', (req, res, next) => {
 	ModelTodo.getTodosPerso(req.user.pseudo).then((result) => {
@@ -209,7 +206,11 @@ router.all('*', (req, res, next) => {
 			})
 		},
 		json: () => {
-			res.send(req.json, req.user.todolistPerso)
+			let json = []
+			json.push(req.json)
+			json.push(req.user.todolistPerso)
+			json.push(req.team.todolistTeam)
+			res.send(json)
 		}
 	})
 })

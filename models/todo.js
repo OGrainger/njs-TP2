@@ -84,28 +84,4 @@ module.exports = {
       return resolve(Todo.update({_id:todoId}, {completedAt: 0}))
     })
   }
-
-
-  // addTodoTeam: (pseudo, forwho)=>{
-  //   var todo = new Todo ({
-  //     pseudo: pseudo,
-  //     forwho:forwho,
-  //     message: message,
-  //     createdAt: Date.now,
-  //     completedAt: 0
-  //   });
-  //  return new Promise ((resolve, reject)=>{
-  //     return resolve(Todo.save())
-  //   })
-  // },
-
-
-
-
-
-
-
-
-
-
 }
