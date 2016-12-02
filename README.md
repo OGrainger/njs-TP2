@@ -2,6 +2,13 @@
 
 TP avec Express, ioredis et mangoose
 
+##Requis
+
+ - bcrypt
+ - Mongoose
+ - ioredis
+ - express
+
 ##Guide d'installation
 
 Naviguez vers le dossier du projet
