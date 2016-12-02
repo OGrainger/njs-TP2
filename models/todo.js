@@ -47,24 +47,6 @@ module.exports = {
     })
   },
 
-  addTodoTeam: (pseudo, message, frpsd, tm)=>{
-
-    let d = new Date()
-    let dateNow = d.toLocaleString()
-
-    var todo = new Todo ({
-      pseudo: pseudo,
-      message: message,
-      team: tm,
-      forPseudo: frpsd,
-      createdAt: dateNow,
-      completedAt: 0
-    });
-   return new Promise ((resolve, reject)=>{
-      return resolve(todo.save())
-    })
-  },
-
   suppTodo: (todoId) => {
     return new Promise ((resolve, reject)=>{
        return resolve(Todo.remove({_id:todoId}))
@@ -83,29 +65,24 @@ module.exports = {
     return new Promise ((resolve, reject) => {
       return resolve(Todo.update({_id:todoId}, {completedAt: 0}))
     })
-  }
+  },
 
+  addTodoTeam: (pseudo, message, frpsd, tm)=>{
 
-  // addTodoTeam: (pseudo, forwho)=>{
-  //   var todo = new Todo ({
-  //     pseudo: pseudo,
-  //     forwho:forwho,
-  //     message: message,
-  //     createdAt: Date.now,
-  //     completedAt: 0
-  //   });
-  //  return new Promise ((resolve, reject)=>{
-  //     return resolve(Todo.save())
-  //   })
-  // },
+    let d = new Date()
+    let dateNow = d.toLocaleString()
 
-
-
-
-
-
-
-
-
-
+    var todo = new Todo ({
+      pseudo: pseudo,
+      message: message,
+      team: tm,
+      forPseudo: frpsd,
+      createdAt: dateNow,
+      completedAt: 0
+    });
+   return new Promise ((resolve, reject)=>{
+      return resolve(todo.save())
+    })
+  },
+  
 }
