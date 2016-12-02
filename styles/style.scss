@@ -1,140 +1,27 @@
 @import "./settings";
+@import "./materialize";
 
 body {
-  background-color: $color-primary;
-  font: $font-primary;
-  color: $color-secondary;
+  background-color: #fffafb;
 }
 
-input {
-  margin: 8px 0;
-  box-sizing: border-box;
-  font: inherit;
-  background-color: $transparent;
-  padding: 5px 7px;
-  color: $color-secondary;
+#table {
+  overflow-x: scroll;
 }
 
-input[type=text], input[type=password], input[type=mail] {
-  width: 30%;
-  border: none;
-  border-bottom: 2px solid $color-secondary;
+.header {
+  color: #ee6e73;
+  font-weight: 200;
 }
 
-input[type=submit], input[type=reset] {
-  color: $color-secondary;
-  border: 2px solid $color-secondary;
+#doit {
+  font-weight: 600;
 }
-
-input[type=submit]:hover, input[type=reset]:hover {
-  cursor: pointer;
-  background-color: $color-secondary;
-  color: $color-primary;
-}
-
-.link-button {
-  background: none;
-  border: none;
-  color: inherit;
-  text-decoration: none;
-  font-weight: bold;
-  margin: 0 0;
-  border: none;
-  font-size: 1em;
-}
-
-.link-button:hover {
-  cursor: pointer;
-  text-shadow: 2px 2px $color-secondary;
-  color: $transparent;
-  background-color: $transparent;
-}
-
-form:placeholder {
-  color: white;
-}
-
-table {
-  width: 99%;
-  margin-left: auto;
-  margin-right: auto;
-  border-collapse: collapse;
-}
-
-th {
-  padding: 10px;
-}
-
-td {
-  padding: 5px;
-}
-tr {
-  border-bottom: 2px dashed $color-primary;
-}
-
-tr:hover {
-  background-color: $color-primary;
-  color: $color-secondary;
-}
-
-#header:hover {
-  background-color: $color-secondary;
-  color: $color-primary;
-}
-
-#colonneLoginTeam {
-  text-align: center;
-  float: left;
-  width: 50%;
-}
-
-#colonneTeam {
-  z-index: 2;
-  text-align: center;
-  float: left;
-  width: 50%;
-  outline: 2px dashed $color-primary;
-}
-
-#colonnePerso {
-  z-index: 1;
-  text-align: center;
-  float:right;
-  width: 50%;
-  outline: 2px dashed $color-primary;
-}
-
-.col_left {
-  float:left;
-  width:50%;
-}
-
-.col_right {
-  float:right;
-  width:50%;
-}
-.todoBandeauTop {
-}
-
-.todoData {
-  min-height: 540px;
-  background-color:$color-secondary;
-  color: $color-primary;
-  overflow-x:auto;
-}
-
-.todoBandeauBottom {
-}
-
-#error {
-  background-color: $color-error;
-  color: $color-secondary;
-}
-
 
 #easterEgg {
   position: fixed;
   bottom: 0;
   right:0;
   color: $transparent;
+  display: none;
 }

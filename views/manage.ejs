@@ -1,68 +1,74 @@
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8">
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="/css/style.css" rel="stylesheet" type="text/css">
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
 <title>Login</title>
 </head>
-<body class="container">
-  <h1  style="text-align:center"><%=h1%></h1>
-  <div class="col_right">
-    <fieldset>
-      <legend>Modifier le mot de passe</legend>
-        <form style="text-align:center" action="/sessions/manage" method = "post">
-          Ancien mot de passe : <br />
-          <input style="width:auto" type="password" name="password">
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/materialize.min.js"></script>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <h1  class="header"><%=h1%></h1>
+    </div>
+    <div class="row">
+      <div class="col m12 l6">
+        <div class="card-panel">
+          <p class="flow-text">Modifier les informations complémentaires</p>
+          <form action="/sessions/manage" method = "post">
+            <p>Mail  : </p>
+            <input type="email" name="email" placeholder="<%=user.email%>">
+            <p>Prénom  : </p>
+            <input type="text" name="firstname" placeholder="<%=user.firstname%>">
+            <p>Nom  : </p>
+            <input type="text" name="lastname" placeholder="<%=user.lastname%>">
+            <input type="password" placeholder="Entrez votre mot de passe" name="password" />
+            <input class="waves-effect waves-light btn" type="submit" value="Valider">
+          </form>
+        </div>
+        <br />
+        <div class="card-panel">
+          <p class="flow-text">Suppression du compte</p>
+          <form action="/sessions/manage/delete" method="post">
+            <input type="password" placeholder="Entrez votre mot de passe" name="password" /><br />
+            <input class="waves-effect waves-light btn" type="submit" value="Supprimer le compte" />
+          </form>
+        </div>
+      </div>
+      <div class="col m12 l6">
+        <div class="card-panel">
+          <p class="flow-text">Modifier le mot de passe</p>
+          <form action="/sessions/manage" method = "post">
+            Ancien mot de passe : <br />
+            <input type="password" name="password">
+            <br />
+            Nouveau mot de passe : <br />
+            <input type="password" name="newPassword">
+            <br>
+            Confirmez le nouveau mot de passe : <br />
+            <input type="password" name="confirmNewPassword">
+            <br>
+            <input class="waves-effect waves-light btn" type="submit" value="Valider">
+          </form>
+        </div>
+        <div class="card-panel">
+          <p class="flow-text">Autre</p>
           <br />
-          Nouveau mot de passe : <br />
-          <input style="width:auto" type="password" name="newPassword">
-          <br>
-          Confirmez le nouveau mot de passe : <br />
-          <input style="width:auto" type="password" name="confirmNewPassword">
-          <br>
-          <input type="submit" value="Valider">
-      </form>
-    </fieldset>
+          Créé le :<br /><%=user.createdAt%>
+          <br />
+          Mis à jour le :<br /><%=user.updatedAt%>
+          <br /> <br />
+          <form action="/todo"><input class="waves-effect waves-light btn" type="submit" value="Retour" /></form>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col_left">
-    <fieldset>
-    <legend>Modifier les informations complémentaires</legend>
-      <form  style="text-align:center" action="/sessions/manage" method = "post">
-        Mail  : <br />
-        <input style="width:auto" type="mail" name="email" placeholder="<%=user.email%>">
-        <br />
-        Prénom  : <br />
-        <input style="width:auto" type="text" name="firstname" placeholder="<%=user.firstname%>">
-        <br />
-        Nom  : <br />
-        <input style="width:auto" type="text" name="lastname" placeholder="<%=user.lastname%>">
-        <br />
-        <input type="password" style="width:240px" placeholder="Entrez votre mot de passe" name="password" />
-        <br>
-        <input type="submit" value="Valider">
-      </form>
-    </fieldset>
-  </div>
-  <div class="col_right">
-    <fieldset>
-      <legend>Autre</legend>
-      <br />
-      Créé le :<br /><%=user.createdAt%>
-      <br />
-      Mis à jour le :<br /><%=user.updatedAt%>
-      <form style="text-align:center" action="/todo"><input type="submit" value="Retour" /></form>
-    </fieldset>
-  </div>
-  <div class="col_left">
-    <fieldset>
-      <legend>Suppression du compte</legend>
-      <form style="text-align:center" action="/sessions/manage/delete" method="post">
-        <input type="password" style="width:240px" placeholder="Entrez votre mot de passe" name="password" /><br />
-        <input type="submit" value="Supprimer le compte" />
-      </form>
-    </fieldset>
-  </div>
-
-
   <div id="easterEgg">
     <a href = "https://www.youtube.com/watch?v=RMICTAl4LCg&list=PLjrhosP-Fp_p19kteSIowkJOaRfgt6N81&index=24">O</a>
   </div>

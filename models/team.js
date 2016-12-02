@@ -40,7 +40,8 @@ module.exports = {
   },
 
   //Supprime l'équipe (commande admin)
-  delete: (teamName) => {
-    return db.run("DELETE FROM teams where teamName = ?", teamname)
+  delete: (teamName, pseudo) => {
+    db.run('UPDATE users SET teamName = ? WHERE pseudo = ?', '', pseudo)
+    return db.run("DELETE FROM teams where teamName = ?", teamName)
   },
 }
