@@ -174,12 +174,16 @@
           <form action="/todo/teams/delete" method = "post">
             <input class="waves-effect waves-light btn" type="submit" value="Supprimer l'équipe" />
           </form>
+          <%} else {%>
+          <a class="btn disabled">Supprimer l&apos;équipe</a>
           <%}%>
         </div>
       </div>
     </div>
 
     <%}%>
+
+    <hr />
 
     <div class="row">
       <div class="col s12">
