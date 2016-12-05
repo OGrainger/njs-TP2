@@ -110,10 +110,10 @@ Les routes suivantes nécessitent un token. Mettez dans le header **token : votr
 - [x] Système de déconnexion
 - [x] Commentaires
 - [x] readme.md
-- [x] Beautifier / Optimisation
+- [x] Optimisation
 
 ##Si on a le temps
 
-- [ ] Pimp my views (CSS, bootstrap..)
+- [x] Pimp my views (materialize)
 - [ ] Panel admin
 - [ ] Idées ?
