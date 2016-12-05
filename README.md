@@ -1,6 +1,12 @@
 #Todo list
 
-TP avec Express, ioredis et mangoose
+##Résumé
+TP avec Express, ioredis et mangoose de gestion de tâches, personnelles et en équipe.
+
+## Contributeurs
+
+- **Oscar Grainger** - _oscarvgrainger@gmail.com_
+- **Clément Lambert** - _clement.lambert@ynov.com_
 
 ##Requis
 
