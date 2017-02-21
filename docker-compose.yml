@@ -1,0 +1,27 @@
+version: '3'
+  services:
+    db-mongo:
+      image: mvertes/alpine-mongo:latest
+      networks:
+        - back-tier
+      volumes:
+        - db-data:/mongo/db &
+    
+    backend:
+      build: .
+      command: node ./app.js &
+      volumes:
+        - .:/app
+        - dependencies:/app/node_modules
+      links:
+        - db-mongo
+      environment:
+        - NODE_ENV=development
+        - MONGO_HOST=db-mongo
+      networks:
+        - front-tier
+networks:
+  front-tier:
+    driver: bridge
+volumes:
+  dependencies:
