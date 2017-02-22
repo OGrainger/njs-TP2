@@ -1,27 +1,42 @@
 version: '3'
-  services:
-    db-mongo:
-      image: mvertes/alpine-mongo:latest
-      networks:
-        - back-tier
-      volumes:
-        - db-data:/mongo/db &
-    
-    backend:
-      build: .
-      command: node ./app.js &
-      volumes:
-        - .:/app
-        - dependencies:/app/node_modules
-      links:
-        - db-mongo
-      environment:
-        - NODE_ENV=development
-        - MONGO_HOST=db-mongo
-      networks:
-        - front-tier
+services:
+        db-mongo:
+                image: mvertes/alpine-mongo:latest
+                networks:
+                        - back-tier
+                volumes:
+                        - db-data:/data/db
+        backend:
+                build: .
+                command: node . --exitcrash
+                volumes:
+                        - .:/app
+                        - dependencies:/app/node_modules
+                links:
+                        - db-mongo
+                environment:
+                        - NODE_ENV=development
+                        - MONGO_HOST=db-mongo
+                networks:
+                        - front-tier
+                        - back-tier
+        load-balancer:
+                image: dockercloud/haproxy:latest
+                ports:
+                        - 8080:80
+                depends_on:
+                        - backend
+                links:
+                        - backend
+                networks:
+                        - front-tier
+                volumes:
+                        - /var/run/docker.sick:/var/run/docker.sock
 networks:
-  front-tier:
-    driver: bridge
+        front-tier:
+                driver: bridge
+        back-tier:
+                driver: bridge
 volumes:
-  dependencies:
+        dependencies:
+        db-data:
