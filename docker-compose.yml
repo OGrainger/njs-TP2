@@ -20,18 +20,6 @@ services:
                 networks:
                         - front-tier
                         - back-tier
-        load-balancer:
-                image: dockercloud/haproxy:latest
-                ports:
-                        - 8080:80
-                depends_on:
-                        - backend
-                links:
-                        - backend
-                networks:
-                        - front-tier
-                volumes:
-                        - /var/run/docker.sick:/var/run/docker.sock
 networks:
         front-tier:
                 driver: bridge
