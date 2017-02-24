@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 
 //connection à la base de données todo
-mongoose.connect('mongodb://localhost/todolist', function(err) {
+mongoose.connect('mongodb://db-mongo:27017', function(err) {
 	if (err) {
 		throw err;
 	}
