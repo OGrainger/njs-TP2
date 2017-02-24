@@ -9,11 +9,8 @@ TP avec Express, ioredis et mangoose de gestion de tâches, personnelles et en �
 - **Clément Lambert** - _clement.lambert@ynov.com_
 
 ##Requis
-
- - bcrypt
- - Mongoose
- - ioredis
- - express
+ - Mongo DB
+ - Redis
 
 ##Guide d'installation
 

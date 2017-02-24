@@ -3,7 +3,7 @@ const db = require('sqlite')
 const Session = require('../models/session')
 const ModelTodo = require('../models/todo')
 const Team = require('../models/team')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 //middleware de recup d'informations lié au user
 router.all('*', (req, res, next) => {
