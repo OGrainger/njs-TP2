@@ -4,7 +4,6 @@ const path = require('path')
 // Dépendances 3rd party
 const express = require('express')
 const bodyParser = require('body-parser')
-const sass = require('node-sass-middleware')
 const db = require('sqlite')
 const cookieParser = require('cookie-parser')
 
@@ -30,14 +29,6 @@ app.use(cookieParser())
 // Middleware pour parser le body
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-
-// Préprocesseur sur les fichiers scss -> css
-app.use(sass({
-  src: path.join(__dirname, 'styles'),
-  dest: path.join(__dirname, 'assets', 'css'),
-  prefix: '/css',
-  outputStyle: 'expanded'
-}))
 
 // On sert les fichiers statiques
 app.use(express.static(path.join(__dirname, 'assets')))

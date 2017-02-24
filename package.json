@@ -17,7 +17,6 @@
     "ioredis": "^2.5.0",
     "method-override": "^2.3.6",
     "mongoose": "^4.8.4",
-    "node-sass-middleware": "^0.9.8",
     "sqlite": "^2.2.0"
   }
 }
