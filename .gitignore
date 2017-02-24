@@ -32,7 +32,9 @@ node_modules
 npm-debug.log
 
 # Ignore compiled assets
-assets/css/*.css
+#Décompilateur SASS ne marche pas sur les serveurs AWS Ubuntu basiques - décompilation en dehors de l'environnement
+# assets/css/*.css
+styles
 
 #Mac files
 *.DS_STORE
